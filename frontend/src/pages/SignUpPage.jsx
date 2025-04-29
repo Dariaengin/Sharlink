@@ -1,8 +1,7 @@
 import React from 'react';
-import Header from '../components/common/Header';
-import SignUpForm from '../components/auth/SignUpForm';
-import Footer from '../components/common/Footer'; // Optional: Can add Footer if needed
-
+import Header from "./common/Header";
+import SignUpForm from './components/auth/SignUpForm';
+import Footer from "./common/Footer";
 const SignUpPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
