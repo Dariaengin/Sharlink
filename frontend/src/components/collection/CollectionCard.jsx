@@ -1,11 +1,17 @@
 import React from 'react';
 
-const LinkCard = ({ title, coverImage, description, url }) => {
+const CollectionCard = ({
+  title,
+  coverImage,
+  numberOfLinks,
+  description,
+  url,
+}) => {
   return (
     <div className='col-md-3 col-sm-6 mb-4 d-flex align-items-stretch'>
       <div className='card w-100 shadow-sm'>
         <img
-          src={coverImage}
+          src={coverImage || 'https://via.placeholder.com/400x200'}
           className='card-img-top'
           alt={title}
           style={{ height: '180px', objectFit: 'cover' }}
@@ -18,7 +24,10 @@ const LinkCard = ({ title, coverImage, description, url }) => {
             {title}
           </h5>
           <p className='text-muted small mb-3' style={{ flexGrow: 1 }}>
-            {description}
+            {description || 'No description available'}
+          </p>
+          <p className='text-muted mb-3' style={{ fontSize: '0.875rem' }}>
+            {numberOfLinks} links
           </p>
           <a
             href={url}
@@ -27,7 +36,7 @@ const LinkCard = ({ title, coverImage, description, url }) => {
             className='text-primary d-flex justify-content-center align-items-center'
             style={{ textDecoration: 'none' }}
           >
-            Follow the link
+            View Collection
             <i className='bi bi-arrow-right ms-2'></i>
           </a>
         </div>
@@ -36,4 +45,4 @@ const LinkCard = ({ title, coverImage, description, url }) => {
   );
 };
 
-export default LinkCard;
+export default CollectionCard;
