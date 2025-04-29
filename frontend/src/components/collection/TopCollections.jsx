@@ -39,7 +39,10 @@ const TopCollections = () => {
                 style={{ height: '180px', objectFit: 'cover' }}
               />
               <div className='card-body d-flex flex-column text-center'>
-                <h5 className='card-title text-truncate mb-2'>
+                <h5
+                  className='card-title text-truncate mb-2'
+                  style={{ minHeight: '60px', lineHeight: '1.2' }}
+                >
                   {collection.title}
                 </h5>
                 <p className='text-muted small mb-0'>
