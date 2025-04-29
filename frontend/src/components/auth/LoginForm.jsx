@@ -17,6 +17,6 @@ const LoginForm = () => {
     e.preventDefault();
     console.log('Logging in with:', formData);
     // Mock API call simulation
-    alert('Login successful! (Mock)');
+    alert('Login successful!');
     // Redirect or update UI state after successful login
   };
