@@ -1,22 +1,25 @@
 const mongoose = require('mongoose');
 
-const collectionSchema = new mongoose.Schema({
-  linkIds: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'link',
+const collectionSchema = new mongoose.Schema(
+  {
+    linkIds: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'link',
+      },
+    ],
+    title: {
+      type: String,
+      required: true,
+      minlength: [5, 'Description must be at least 4 characters'],
+      maxlength: [20, 'Title must be less than 21 characters'],
     },
-  ],
-  title: {
-    type: String,
-    required: true,
-    minlength: [8, 'Minimum length should be over than 7 symbols'],
-    maxlength: [20, 'Maximum length should be less than 21 symbols'],
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  { timestamps: true }
+);
 
 module.exports = mongoose.model('collection', collectionSchema);
