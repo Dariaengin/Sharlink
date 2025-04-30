@@ -21,4 +21,3 @@ const LoginForm = () => {
     // Redirect or update UI state after successful login
   };
  
-  return (
