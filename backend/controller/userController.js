@@ -125,4 +125,44 @@ const logIn = async (req, res) => {
   }
 };
 
-module.exports = { signUp, logIn };
+// Logout user
+const logOut = async (req, res) => {
+  try {
+    // Clear the cookies
+    res.clearCookie('authToken');
+    res.clearCookie('userInfo');
+
+    res.status(200).json({ message: 'Logged out successfully' });
+  } catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Get user page (only for authenticated users)
+const userPage = async (req, res) => {
+  try {
+    // Get user ID from token, set in middleware (userAuth.isLoggedIn)
+    const userId = req.userId;
+
+    const user = await User.findById(userId).select('-password');
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.status(200).json({
+      message: 'User page loaded successfully',
+      user,
+    });
+  } catch (error) {
+    console.error('User page error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+module.exports = {
+  signUp,
+  logIn,
+  logOut,
+  userPage,
+};

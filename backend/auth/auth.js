@@ -9,7 +9,7 @@ const isLoggedIn = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // now you can use req.user in routes
+    req.userId = decoded.userId;
     next();
   } catch (err) {
     return res.status(400).json({ error: 'Invalid token.' });
