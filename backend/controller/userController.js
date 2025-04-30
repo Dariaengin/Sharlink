@@ -34,14 +34,14 @@ const signUp = async (req, res) => {
     const token = jwt.sign(
       { userId: newUser._id, nickname: newUser.nickname },
       process.env.JWT_SECRET,
-      { expiresIn: '1d' }
+      { expiresIn: '7d' }
     );
 
     // Set token in HttpOnly cookie
     res.cookie('authToken', token, {
       httpOnly: true,
       sameSite: 'Lax',
-      //   maxAge: 0 * 24 * 60 * 60 * 1000, // 1 day optionally
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 day optionally
     });
 
     // Return user data
@@ -59,4 +59,70 @@ const signUp = async (req, res) => {
   }
 };
 
-module.exports = { signUp };
+// Log in user
+const logIn = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Validate input
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+
+    // Find user by email
+    const existingUser = await User.findOne({ email });
+    if (!existingUser) {
+      return res.status(401).json({ error: 'User not found' });
+    }
+
+    // Compare passwords
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
+    if (!isPasswordCorrect) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: existingUser._id, nickname: existingUser.nickname },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    // Set cookies
+    res.cookie('authToken', token, {
+      httpOnly: true,
+      sameSite: 'Lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 day optionally
+    });
+
+    res.cookie(
+      'userInfo',
+      JSON.stringify({
+        id: existingUser._id,
+        nickname: existingUser.nickname,
+        email: existingUser.email,
+      }),
+      {
+        httpOnly: false,
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 day optionally
+      }
+    );
+
+    res.status(200).json({
+      message: 'Login successful',
+      user: {
+        id: existingUser._id,
+        nickname: existingUser.nickname,
+        email: existingUser.email,
+      },
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+module.exports = { signUp, logIn };
