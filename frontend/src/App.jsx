@@ -18,9 +18,9 @@ import './App.css';
 function App() {
   return (
     <Router>
-      <div className="d-flex flex-column min-vh-100">
+      <div className='d-flex flex-column min-vh-100'>
         <Header />
-        <main>
+        <main className='flex-grow-1 d-flex flex-column'>
           <Container fluid='md' className='py-4'>
             <Routes>
               {/* Homepage */}
