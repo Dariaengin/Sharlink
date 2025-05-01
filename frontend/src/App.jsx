@@ -5,12 +5,14 @@ import { Container } from 'react-bootstrap';
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
 import Homepage from './pages/Homepage';
-import ProfilePage from './pages/ProfilePage'; 
+import ProfilePage from './pages/ProfilePage';
 import CollectionPage from './pages/CollectionPage';
 import CollectionsListPage from './pages/CollectionsListPage';
-
 // import LoginPage from './pages/LoginPage';
 // import SignUpPage from './pages/SignUpPage';
+import AddLinkForm from './components/collection/AddLinkForm';
+import EditLinkForm from './components/collection/EditLinkForm';
+
 import NotFound from './pages/NotFound';
 
 import './App.css';
@@ -23,14 +25,30 @@ function App() {
         <main className='flex-grow-1 d-flex flex-column'>
           <Container fluid='md' className='py-4'>
             <Routes>
+              {/* Homepage */}
               <Route path='/' element={<Homepage />} />
-              {/* Other routes there */}
-              <Route path="/profile" element={<ProfilePage/>} /> 
-              <Route path="/collection/:collectionId" element={<CollectionPage />} />
-              <Route path="/collection" element={<CollectionsListPage />} />
-              <Route path='/*' element={<NotFound />} />
+
+              {/* SignUp and LogIn*/}
               {/* <Route path='/login' element={<LoginPage />} />
               <Route path='/signup' element={<SignUpPage />} /> */}
+
+              {/* Link operations */}
+              <Route
+                path='/collection/:collectionId/add-link'
+                element={<AddLinkForm />}
+              />
+              <Route path='/link/:linkId/edit' element={<EditLinkForm />} />
+
+              {/* Profile and Collections */}
+              <Route path='/profile' element={<ProfilePage />} />
+              <Route path='/collection' element={<CollectionsListPage />} />
+              <Route
+                path='/collection/:collectionId'
+                element={<CollectionPage />}
+              />
+
+              {/* 404 Page */}
+              <Route path='/*' element={<NotFound />} />
             </Routes>
           </Container>
         </main>

@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
 
-const EditLinkForm = () => {
-  const { linkId } = useParams();
-
+const AddLinkForm = () => {
   const [formData, setFormData] = useState({
     url: '',
     title: '',
@@ -13,20 +10,6 @@ const EditLinkForm = () => {
   });
 
   const [errors, setErrors] = useState({});
-
-  useEffect(() => {
-    const fetchLink = async () => {
-      try {
-        const res = await axios.get(`/api/links/${linkId}`);
-        setFormData(res.data);
-      } catch (error) {
-        console.error(error);
-        alert('Failed to load link');
-      }
-    };
-
-    fetchLink();
-  }, [linkId]);
 
   const handleChange = (e) => {
     setFormData({
@@ -42,7 +25,7 @@ const EditLinkForm = () => {
     return newErrors;
   };
 
-  const handleSave = async () => {
+  const handleSubmit = async () => {
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -50,11 +33,13 @@ const EditLinkForm = () => {
     }
 
     try {
-      await axios.put(`/api/links/${linkId}`, formData);
-      alert('Link updated successfully!');
+      await axios.post('/api/links', formData);
+      alert('Link added successfully!');
+      setFormData({ url: '', title: '', description: '', category: '' });
+      setErrors({});
     } catch (error) {
       console.error(error);
-      alert('Failed to update link');
+      alert('Failed to add link');
     }
   };
 
@@ -74,7 +59,7 @@ const EditLinkForm = () => {
               name="url"
               value={formData.url}
               onChange={handleChange}
-              placeholder="pre-filled url"
+              placeholder=" "
             />
             {errors.url && <p className="error-text">{errors.url}</p>}
           </div>
@@ -87,7 +72,7 @@ const EditLinkForm = () => {
               name="title"
               value={formData.title}
               onChange={handleChange}
-              placeholder="pre-filled title"
+              placeholder=" "
             />
           </div>
 
@@ -99,7 +84,7 @@ const EditLinkForm = () => {
               name="description"
               value={formData.description}
               onChange={handleChange}
-              placeholder="pre-filled description"
+              placeholder=" "
             />
           </div>
 
@@ -122,12 +107,14 @@ const EditLinkForm = () => {
       </div>
 
       <div className="item3">
-        <button className="align-end" type="button" onClick={handleSave}>
-          Save Changes
-        </button>
+        <div className="divflex">
+          <button className="align" type="button" onClick={handleSubmit}>
+            Submit (add link)
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default EditLinkForm;
+export default AddLinkForm;
