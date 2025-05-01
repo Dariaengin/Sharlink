@@ -13,7 +13,12 @@ const Header = () => {
         >
           SharLinks <i className='bi bi-share' />
         </Navbar.Brand>
+
         <Nav className='ms-auto d-flex gap-3'>
+          <Nav.Link as={Link} to='/profile'>
+            <i className='bi bi-person-circle me-1' />
+            Profile
+          </Nav.Link>
           <Nav.Link as={Link} to='/login'>
             Login
           </Nav.Link>
