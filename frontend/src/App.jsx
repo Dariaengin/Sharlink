@@ -1,14 +1,16 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
-
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
 import Homepage from './pages/Homepage';
 import NotFound from './pages/NotFound';
-
+import ProfilePage from './pages/ProfilePage';
+import CollectionPage from './pages/CollectionPage';
+import CollectionsListPage from './pages/CollectionsListPage';
+import AddLinkForm from './components/collection/AddLinkForm';
+import EditLinkForm from './components/collection/EditLinkForm';
 import './App.css';
-
 function App() {
   return (
     <Router>
@@ -18,8 +20,12 @@ function App() {
           <Container fluid='md' className='py-4'>
             <Routes>
               <Route path='/' element={<Homepage />} />
-              {/* Other routes there */}
-              <Route path='/*' element={<NotFound />}></Route>
+              <Route path='/profile' element={<ProfilePage />} />
+              <Route path='/collection' element={<CollectionsListPage />} />
+              <Route path='/collection/:collectionId' element={<CollectionPage />} />
+              <Route path='/collection/:collectionId/add-link' element={<AddLinkForm />} />
+              <Route path='/link/:linkId/edit' element={<EditLinkForm />} />
+              <Route path='/*' element={<NotFound />} />
             </Routes>
           </Container>
         </main>
@@ -28,5 +34,4 @@ function App() {
     </Router>
   );
 }
-
 export default App;
