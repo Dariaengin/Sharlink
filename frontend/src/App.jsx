@@ -8,10 +8,12 @@ import Homepage from './pages/Homepage';
 import ProfilePage from './pages/ProfilePage';
 import CollectionPage from './pages/CollectionPage';
 import CollectionsListPage from './pages/CollectionsListPage';
-import NotFound from './pages/NotFound';
-
+// import LoginPage from './pages/LoginPage';
+// import SignUpPage from './pages/SignUpPage';
 import AddLinkForm from './components/collection/AddLinkForm';
 import EditLinkForm from './components/collection/EditLinkForm';
+
+import NotFound from './pages/NotFound';
 
 import './App.css';
 
@@ -26,13 +28,27 @@ function App() {
               {/* Homepage */}
               <Route path='/' element={<Homepage />} />
 
-              {/* Profile and Collections */}
-              <Route path='/collection' element={<CollectionsListPage />} />
-              <Route path='/collection/:collectionId' element={<CollectionPage />} />
+              {/* SignUp and LogIn*/}
+              {/* <Route path='/login' element={<LoginPage />} />
+              <Route path='/signup' element={<SignUpPage />} /> */}
 
               {/* Link operations */}
-              <Route path='/collection/:collectionId/add-link' element={<AddLinkForm />} />
+              <Route
+                path='/collection/:collectionId/add-link'
+                element={<AddLinkForm />}
+              />
               <Route path='/link/:linkId/edit' element={<EditLinkForm />} />
+
+              {/* Profile and Collections */}
+              <Route path='/profile' element={<ProfilePage />} />
+              <Route path='/collection' element={<CollectionsListPage />} />
+              <Route
+                path='/collection/:collectionId'
+                element={<CollectionPage />}
+              />
+
+              {/* 404 Page */}
+              <Route path='/*' element={<NotFound />} />
             </Routes>
           </Container>
         </main>
