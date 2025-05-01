@@ -4,12 +4,10 @@ import { Container } from 'react-bootstrap';
 
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
-
 import Homepage from './pages/Homepage';
-import ProfilePage from './pages/ProfilePage';
+import ProfilePage from './pages/ProfilePage'; 
 import CollectionPage from './pages/CollectionPage';
 import CollectionsListPage from './pages/CollectionsListPage';
-
 import NotFound from './pages/NotFound';
 
 import AddLinkForm from './components/collection/AddLinkForm'; // added
@@ -25,13 +23,14 @@ function App() {
         <main className='flex-grow-1 d-flex flex-column'>
           <Container fluid='md' className='py-4'>
             <Routes>
-              {/* Main routes from the main branch */}
               <Route path='/' element={<Homepage />} />
-              <Route path='/profile' element={<ProfilePage />} />
-              <Route path='/collection/:collectionId' element={<CollectionPage />} />
-              <Route path='/collection' element={<CollectionsListPage />} />
-
-              {/* New routes added in your branch */}
+              
+              {/* Add your new routes here */}
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/collection/:collectionId" element={<CollectionPage />} />
+              <Route path="/collection" element={<CollectionsListPage />} />
+              
+              {/* New routes for adding and editing a link */}
               <Route path='/collection/:collectionId/add-link' element={<AddLinkForm />} />
               <Route path='/link/:linkId/edit' element={<EditLinkForm />} />
 
