@@ -27,9 +27,9 @@ function App() {
             <Routes>
               {/* Main routes from the main branch */}
               <Route path='/' element={<Homepage />} />
-              <Route path="/profile" element={<ProfilePage />} /> 
-              <Route path="/collection/:collectionId" element={<CollectionPage />} />
-              <Route path="/collection" element={<CollectionsListPage />} />
+              <Route path='/profile' element={<ProfilePage />} />
+              <Route path='/collection/:collectionId' element={<CollectionPage />} />
+              <Route path='/collection' element={<CollectionsListPage />} />
 
               {/* New routes added in your branch */}
               <Route path='/collection/:collectionId/add-link' element={<AddLinkForm />} />
