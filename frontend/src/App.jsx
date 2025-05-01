@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
-
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
 import Homepage from './pages/Homepage';
@@ -24,12 +23,11 @@ function App() {
           <Container fluid='md' className='py-4'>
             <Routes>
               <Route path='/' element={<Homepage />} />
-              
-              {/* Add your new routes here */}
+              {/* Other routes here */}
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/collection/:collectionId" element={<CollectionPage />} />
               <Route path="/collection" element={<CollectionsListPage />} />
-              
+
               {/* New routes for adding and editing a link */}
               <Route path='/collection/:collectionId/add-link' element={<AddLinkForm />} />
               <Route path='/link/:linkId/edit' element={<EditLinkForm />} />
