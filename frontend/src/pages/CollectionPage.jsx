@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../components/common/Header';
-import AddLinkForm from '../components/collection/AddLinkForm';
+// import AddLinkForm from '../components/collection/AddLinkForm';
 import LinkCard from '../components/collection/LinkCard';
 import CollectionList from '../components/profile/CollectionList';
 
@@ -41,10 +41,10 @@ const CollectionPage = () => {
       <Header />
 
       <main className="container mx-auto px-4 py-8 flex-grow">
-        <div className="flex justify-between items-center mb-6">
+        {/* <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Collection #{collectionId}</h2>
           <AddLinkForm onAdd={handleAddLink} />
-        </div>
+        </div> */}
 
         <div className="row">
           {links.map((link) => (
