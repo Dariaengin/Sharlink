@@ -33,9 +33,6 @@ function App() {
               {/* Link operations */}
               <Route path='/collection/:collectionId/add-link' element={<AddLinkForm />} />
               <Route path='/link/:linkId/edit' element={<EditLinkForm />} />
-
-              {/* Catch-all for 404 */}
-              <Route path='*' element={<NotFound />} />
             </Routes>
           </Container>
         </main>
