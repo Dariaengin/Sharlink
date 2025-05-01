@@ -27,7 +27,6 @@ function App() {
               <Route path='/' element={<Homepage />} />
 
               {/* Profile and Collections */}
-              <Route path='/profile' element={<ProfilePage />} />
               <Route path='/collection' element={<CollectionsListPage />} />
               <Route path='/collection/:collectionId' element={<CollectionPage />} />
 
