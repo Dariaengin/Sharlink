@@ -1,5 +1,6 @@
 // src/pages/Homepage.jsx
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import SearchBar from '../components/common/SearchBar';
 import TopCollections from '../components/collection/TopCollections';
@@ -37,9 +38,11 @@ const Homepage = () => {
   }, []);
 
   return (
+    
     <div className='container mt-4'>
       <h1 className='text-center mb-4'>Welcome to SharLinks</h1>
-      <SearchBar />
+    
+  <SearchBar />
       {/* Top Collections Section */}
       <TopCollections />
       {/* Link Cards Section with fetched data */}

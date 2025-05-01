@@ -5,6 +5,10 @@ import { Container } from 'react-bootstrap';
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
 import Homepage from './pages/Homepage';
+import ProfilePage from './pages/ProfilePage'; 
+import CollectionPage from './pages/CollectionPage';
+import CollectionsListPage from './pages/CollectionsListPage';
+
 // import LoginPage from './pages/LoginPage';
 // import SignUpPage from './pages/SignUpPage';
 import NotFound from './pages/NotFound';
@@ -21,6 +25,9 @@ function App() {
             <Routes>
               <Route path='/' element={<Homepage />} />
               {/* Other routes there */}
+              <Route path="/profile" element={<ProfilePage/>} /> 
+              <Route path="/collection/:collectionId" element={<CollectionPage />} />
+              <Route path="/collection" element={<CollectionsListPage />} />
               <Route path='/*' element={<NotFound />} />
               {/* <Route path='/login' element={<LoginPage />} />
               <Route path='/signup' element={<SignUpPage />} /> */}
