@@ -27,9 +27,9 @@ function App() {
               <Route path='/' element={<Homepage />} />
 
               {/* Profile and Collections */}
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/collection" element={<CollectionsListPage />} />
-              <Route path="/collection/:collectionId" element={<CollectionPage />} />
+              <Route path='/profile' element={<ProfilePage />} />
+              <Route path='/collection' element={<CollectionsListPage />} />
+              <Route path='/collection/:collectionId' element={<CollectionPage />} />
 
               {/* Link operations */}
               <Route path='/collection/:collectionId/add-link' element={<AddLinkForm />} />
