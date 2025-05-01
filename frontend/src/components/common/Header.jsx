@@ -19,6 +19,9 @@ const Header = () => {
             <i className='bi bi-person-circle me-1' />
             Profile
           </Nav.Link>
+          <Nav.Link as={Link} to='/collection'>
+            Collection Page
+          </Nav.Link>
           <Nav.Link as={Link} to='/login'>
             Login
           </Nav.Link>

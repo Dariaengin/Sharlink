@@ -1,11 +1,14 @@
-// components/profile/CollectionList.jsx
 import React from 'react';
 import CollectionCard from './CollectionCard';
 
 const CollectionList = ({ collections }) => {
+  if (collections.length === 0) {
+    return <p className="text-center text-muted">No collections found.</p>;
+  }
+
   return (
     <div className="row">
-      {collections.map((col, index) => (
+      {collections.map((col) => (
         <CollectionCard
           key={col.id}
           title={col.title}
@@ -20,5 +23,4 @@ const CollectionList = ({ collections }) => {
 };
 
 export default CollectionList;
-
-
+  
