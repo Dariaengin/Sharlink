@@ -15,6 +15,10 @@ router.get('/user', userAuth.isLoggedIn, userController.userPage);
 // Collection routes
 router.get('/collections', collectionController.getAllCollections);
 router.post('/collections/seed', collectionController.seedCollections);
+router.get(
+  '/collections/:collectionId',
+  collectionController.getCollectionById
+);
 
 // Link routes
 router.post('/links', linkController.createLink);
