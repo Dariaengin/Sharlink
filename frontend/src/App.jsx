@@ -10,8 +10,10 @@ import ProfilePage from './pages/ProfilePage';
 import OneCollectionPage from './pages/OneCollectionPage';
 import CollectionPage from './pages/CollectionPage';
 import CollectionsListPage from './pages/CollectionsListPage';
-// import LoginPage from './pages/LoginPage';
-// import SignUpPage from './pages/SignUpPage';
+// import LoginPage from './pages/LoginPage'; // Hatem
+// import SignUpPage from './pages/SignUpPage'; // Hatem
+import LoginPage from './components/authorisation/LoginPage';
+import SignupPage from './components/authorisation/SignupPage';
 import AddLinkForm from './components/collection/AddLinkForm';
 import EditLinkForm from './components/collection/EditLinkForm';
 
@@ -29,6 +31,8 @@ function App() {
             <Routes>
               <Route path='/' element={<Homepage />} />
               <Route path='/link/:linkId' element={<LinkPage />} />
+              <Route path='/signup' element={<SignupPage />} />
+              <Route path='/login' element={<LoginPage />} />
 
               {/* SignUp and LogIn*/}
               {/* <Route path='/login' element={<LoginPage />} />
