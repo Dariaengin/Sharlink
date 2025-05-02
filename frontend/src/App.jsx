@@ -5,7 +5,9 @@ import { Container } from 'react-bootstrap';
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
 import Homepage from './pages/Homepage';
+import LinkPage from './pages/LinkPage';
 import ProfilePage from './pages/ProfilePage';
+import OneCollectionPage from './pages/OneCollectionPage';
 import CollectionPage from './pages/CollectionPage';
 import CollectionsListPage from './pages/CollectionsListPage';
 // import LoginPage from './pages/LoginPage';
@@ -25,8 +27,8 @@ function App() {
         <main className='flex-grow-1 d-flex flex-column'>
           <Container fluid='md' className='py-4'>
             <Routes>
-              {/* Homepage */}
               <Route path='/' element={<Homepage />} />
+              <Route path='/link/:linkId' element={<LinkPage />} />
 
               {/* SignUp and LogIn*/}
               {/* <Route path='/login' element={<LoginPage />} />
@@ -44,7 +46,7 @@ function App() {
               <Route path='/collection' element={<CollectionsListPage />} />
               <Route
                 path='/collection/:collectionId'
-                element={<CollectionPage />}
+                element={<OneCollectionPage />}
               />
 
               {/* 404 Page */}

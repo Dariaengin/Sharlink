@@ -70,7 +70,23 @@ const getAllCollections = async (req, res) => {
   }
 };
 
+// Get one collection by ID
+const getCollectionById = async (req, res) => {
+  try {
+    const collection = await Collection.findById(
+      req.params.collectionId
+    ).populate('linkIds');
+    if (!collection) {
+      return res.status(404).json({ message: 'Collection not found' });
+    }
+    res.json(collection);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
 module.exports = {
   seedCollections,
   getAllCollections,
+  getCollectionById,
 };

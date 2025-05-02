@@ -1,39 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+const imageMap = {
+  'Frontend Tools': '/images/Frontend-Tools-cover.jpg',
+  'JavaScript Resources': '/images/JavaScript-Resources-cover.png',
+  'Favorite Coffee Spots': '/images/Favorite-Coffee-Spots-cover.jpg',
+  'Must-See Movies': '/images/Must-See-Movies-cover.jpg',
+  'Hidden Gem Restaurants': '/images/Hidden-Gem-Restaurants-cover.jpg',
+  'Dream Travel Destinations': '/images/Dream-Travel-Destinations-cover.jpg',
+  'Inspiring Musicians': '/images/Inspiring-Musicians-cover.jpg',
+  'Cozy Bookstores': '/images/Cozy-Bookstores-cover.jpg',
+  'Weekend Getaways': '/images/Weekend-Getaways-cover.jpg',
+  'Local Art & Museums': '/images/Local-Art-Museums-cover.jpg',
+  'Best Podcasts Right Now': '/images/Best-Podcasts-Right-Now-cover.jpg',
+  'Home Decor Inspo': '/images/Home-Decor-Inspo-cover.jpeg',
+};
 
 const TopCollections = () => {
+  const [collections, setCollections] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCollections = async () => {
+      try {
+        const res = await axios.get('http://localhost:2100/api/collections');
+        setCollections(res.data);
+      } catch (error) {
+        console.error('Failed to fetch collections:', error);
+      }
+    };
+
+    fetchCollections();
+  }, []);
+
   return (
     <section className='mt-5'>
       <h2 className='text-center mb-4'>Top Collections</h2>
       <div className='row justify-content-center'>
-        {[
-          {
-            title: 'Tech News',
-            coverImage: 'https://picsum.photos/seed/tech/300/180',
-            linkCount: 12,
-          },
-          {
-            title: 'Design Resources',
-            coverImage: 'https://picsum.photos/seed/design/300/180',
-            linkCount: 8,
-          },
-          {
-            title: 'Productivity Tools',
-            coverImage: 'https://picsum.photos/seed/tools/300/180',
-            linkCount: 15,
-          },
-          {
-            title: 'Marketing Insights',
-            coverImage: 'https://picsum.photos/seed/marketing/300/180',
-            linkCount: 10,
-          },
-        ].map((collection, index) => (
+        {collections.map((collection) => (
           <div
-            key={index}
+            key={collection._id}
             className='col-md-3 col-sm-6 mb-4 d-flex align-items-stretch'
+            onClick={() => navigate(`/collection/${collection._id}`)}
+            style={{ cursor: 'pointer' }}
           >
             <div className='card w-100 shadow-sm'>
               <img
-                src={collection.coverImage}
+                src={
+                  imageMap[collection.title] || 'https://picsum.photos/300/180'
+                }
                 className='card-img-top'
                 alt={collection.title}
                 style={{ height: '180px', objectFit: 'cover' }}
@@ -45,8 +61,8 @@ const TopCollections = () => {
                 >
                   {collection.title}
                 </h5>
-                <p className='text-muted small mb-0'>
-                  {collection.linkCount} links
+                <p className='text-muted small mb-2'>
+                  {collection.linkIds?.length || 0} links
                 </p>
               </div>
             </div>
