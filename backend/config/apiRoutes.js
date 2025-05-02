@@ -4,6 +4,7 @@ const collectionController = require('../controller/collectionController');
 const linkController = require('../controller/linkController');
 
 const userAuth = require('../auth/auth');
+const { isLinkOwner } = require('../middlewares/ownership');
 const router = express.Router();
 
 // User routs
@@ -21,10 +22,20 @@ router.get(
 );
 
 // Link routes
-router.post('/links', linkController.createLink);
+router.post('/links', userAuth.isLoggedIn, linkController.createLink); // Only authorized user can add link
 router.get('/links', linkController.getAllLinks);
 router.get('/links/:linkId', linkController.getLinkById);
-router.put('/links/:linkId', linkController.updateLink);
-router.delete('/links/:linkId', linkController.deleteLink);
+router.put(
+  '/links/:linkId',
+  userAuth.isLoggedIn,
+  isLinkOwner,
+  linkController.updateLink
+); // Only a logged in user and owner can edit their link.
+router.delete(
+  '/links/:linkId',
+  userAuth.isLoggedIn,
+  isLinkOwner,
+  linkController.deleteLink
+); // Only a logged in user and owner can delete their link.
 
 module.exports = router;

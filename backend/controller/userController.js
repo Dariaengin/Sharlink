@@ -40,6 +40,7 @@ const signUp = async (req, res) => {
     // Set token in HttpOnly cookie
     res.cookie('authToken', token, {
       httpOnly: true,
+      secure: false,
       sameSite: 'Lax',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 day optionally
     });
@@ -94,6 +95,7 @@ const logIn = async (req, res) => {
     // Set cookies
     res.cookie('authToken', token, {
       httpOnly: true,
+      secure: false,
       sameSite: 'Lax',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 day optionally
     });
