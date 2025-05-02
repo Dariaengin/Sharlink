@@ -1,20 +1,22 @@
 import React from 'react';
-import Header from "./common/Header";
-import SignUpForm from './components/auth/SignUpForm';
-import Footer from "./common/Footer";
-const SignUpPage = () => {
+import { Container } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import SignupForm from '../components/auth/SignupForm';
+
+const SignupPage = () => {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header showSignUp={false} showLogin={true} /> {/* Show Login link, hide Sign Up link */}
-      <main className="flex-grow container mx-auto px-4 py-8 flex justify-center items-center">
-        <div className="w-full max-w-md">
-          <h1 className="text-2xl font-bold text-center mb-6">Create Your SharLinks Account</h1>
-          <SignUpForm />
+    <Container className='d-flex justify-content-center align-items-center'>
+      <div className='w-100' style={{ maxWidth: '360px' }}>
+        <h4 className='text-center mb-4 mt-5'>Create your SharLinks account</h4>
+        <SignupForm />
+        <div className='text-center mt-3'>
+          <small>
+            Already have an account? <Link to='/login'>Login</Link>
+          </small>
         </div>
-      </main>
-      { <Footer /> }
-    </div>
+      </div>
+    </Container>
   );
 };
 
-export default SignUpPage;
+export default SignupPage;

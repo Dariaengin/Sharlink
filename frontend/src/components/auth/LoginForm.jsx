@@ -1,104 +1,63 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import Input from './common/Input';
-import Button from './common/Button';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { Form, Button, Alert } from 'react-bootstrap';
 
 const LoginForm = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-  const [error, setError] = useState(""); // State for error messages
-  const [loading, setLoading] = useState(false); // State for loading indicator
-  const navigate = useNavigate(); // Hook for navigation
-  const { login } = useAuth(); // Get login function from context
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError(""); // Clear error on input change
-  };
-
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
-    setLoading(true);
+    setError('');
 
     try {
-      // Call login function from AuthContext
-      const result = await login(formData.email, formData.password);
-
-      if (result.success) {
-        console.log("Login successful:", result.user);
-        alert("Login successful!"); // Simple success feedback
-        // Redirect to a placeholder dashboard or home page after successful login
-        // navigate('/dashboard'); // Replace with actual dashboard route later
-        navigate("/"); // Redirecting to root for now
-      } else {
-        setError(result.error || "Login failed. Please check credentials.");
-      }
+      await axios.post(
+        'http://localhost:2100/api/login',
+        { email, password },
+        { withCredentials: true }
+      );
+      navigate('/profile');
     } catch (err) {
-      // This catch block might be less likely to be hit if AuthContext handles errors
-      console.error("Login component error:", err);
-      setError("An unexpected error occurred during login.");
-    } finally {
-      setLoading(false);
+      setError(err.response?.data?.message || 'Login failed');
+      console.error('Login error:', err);
     }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-    >
-      {error && <p className="text-red-500 text-xs italic mb-4">{error}</p>}{" "}
-      {/* Display error message */}
-      <div className="mb-4">
-        <label
-          className="block text-gray-700 text-sm font-bold mb-2"
-          htmlFor="email"
-        >
-          Email
-        </label>
-        <Input
-          type="email"
-          name="email"
-          placeholder="your.email@example.com"
-          value={formData.email}
-          onChange={handleChange}
+    <Form onSubmit={handleLogin}>
+      {error && <Alert variant='danger'>{error}</Alert>}
+
+      <Form.Group className='mb-3' controlId='formEmail'>
+        <Form.Label>Email</Form.Label>
+        <Form.Control
+          type='email'
+          placeholder='Enter your email'
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
-      </div>
-      <div className="mb-6">
-        <label
-          className="block text-gray-700 text-sm font-bold mb-2"
-          htmlFor="password"
-        >
-          Password
-        </label>
-        <Input
-          type="password"
-          name="password"
-          placeholder="******************"
-          value={formData.password}
-          onChange={handleChange}
+      </Form.Group>
+
+      <Form.Group className='mb-3' controlId='formPassword'>
+        <Form.Label>Password</Form.Label>
+        <Form.Control
+          type='password'
+          placeholder='Enter your password'
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           required
         />
-      </div>
-      <div className="flex items-center justify-between">
-        <Button type="submit" disabled={loading}>
-          {" "}
-          {/* Disable button while loading */}
-          {loading ? "Logging In..." : "Log In"}
+      </Form.Group>
+
+      <div className='d-grid mb-3'>
+        <Button variant='primary' type='submit'>
+          Login
         </Button>
-        <Link
-          to="/signup"
-          className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-        >
-          Don't have an account? Sign Up
-        </Link>
       </div>
-    </form>
+    </Form>
   );
 };
 
