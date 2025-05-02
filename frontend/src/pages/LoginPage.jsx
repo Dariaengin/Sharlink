@@ -1,7 +1,10 @@
 import React from 'react';
-import Header from './common/Header';
-import LoginForm from './components/auth/LoginForm';
-import Footer from './common/Footer'; 
+import Header from "../components/common/Header";
+import Footer from "../components/common/Footer";
+import LoginForm from '../components/auth/LoginForm';
+// import Header from './common/Header';
+// import LoginForm from './components/auth/LoginForm';
+// import Footer from './common/Footer'; 
 
 const LoginPage = () => {
   return (

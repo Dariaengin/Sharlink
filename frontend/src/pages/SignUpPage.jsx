@@ -1,7 +1,10 @@
 import React from 'react';
-import Header from "./common/Header";
-import SignUpForm from './components/auth/SignUpForm';
-import Footer from "./common/Footer";
+// import Header from "./common/Header";
+// import SignUpForm from './components/auth/SignUpForm';
+// import Footer from "./common/Footer";
+import Header from "../components/common/Header";
+import Footer from "../components/common/Footer";
+import SignUpForm from "../components/auth/SignUpForm";
 const SignUpPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
