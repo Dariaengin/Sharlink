@@ -25,7 +25,9 @@ const AddLinkForm = () => {
     return newErrors;
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -44,73 +46,88 @@ const AddLinkForm = () => {
   };
 
   return (
-    <div className="grid-container">
-      <div className="item1">
-        <p>Header: Logo + Navigation Links</p>
-      </div>
+    <div className="container py-4">
+      <div className="row">
+        <div className="col-12 col-md-6">
+          <div className="bg-light p-4 rounded h-100 d-flex flex-column justify-content-between">
 
-      <div className="item2">
-        <div className="ver">
-          <div>
-            <label>URL</label>
-            <input
-              className="input-field"
-              type="text"
-              name="url"
-              value={formData.url}
-              onChange={handleChange}
-              placeholder=" "
-            />
-            {errors.url && <p className="error-text">{errors.url}</p>}
+            <form className="d-flex flex-column gap-3" onSubmit={handleSubmit}>
+
+              <div className="row align-items-center">
+                <label htmlFor="url" className="col-sm-3 col-form-label">
+                  URL<span className="text-danger">*</span>
+                </label>
+                <div className="col-sm-9">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="url"
+                    name="url"
+                    value={formData.url}
+                    onChange={handleChange}
+                  />
+                  {errors.url && <div className="text-danger small">{errors.url}</div>}
+                </div>
+              </div>
+
+              <div className="row align-items-center">
+                <label htmlFor="title" className="col-sm-3 col-form-label">Title</label>
+                <div className="col-sm-9">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="title"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+
+              <div className="row align-items-center">
+                <label htmlFor="description" className="col-sm-3 col-form-label">Description</label>
+                <div className="col-sm-9">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="description"
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+
+              <div className="row align-items-center">
+                <label htmlFor="category" className="col-sm-3 col-form-label">
+                  Category<span className="text-danger">*</span>
+                </label>
+                <div className="col-sm-9">
+                  <select
+                    id="category"
+                    name="category"
+                    className="form-select"
+                    value={formData.category}
+                    onChange={handleChange}
+                  >
+                    <option value="">-- Select --</option>
+                    <option value="Computer Games">Computer Games</option>
+                    <option value="Musicians">Musicians</option>
+                    <option value="Museums">Museums</option>
+                  </select>
+                  {errors.category && <div className="text-danger small">{errors.category}</div>}
+                </div>
+              </div>
+
+              <div className="d-flex justify-content-end mt-auto">
+                <button type="submit" className="btn btn-primary">
+                  Submit (add link)
+                </button>
+              </div>
+
+            </form>
+
           </div>
-
-          <div>
-            <label>Title</label>
-            <input
-              className="input-field"
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              placeholder=" "
-            />
-          </div>
-
-          <div>
-            <label>Description</label>
-            <input
-              className="input-field"
-              type="text"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder=" "
-            />
-          </div>
-
-          <div>
-            <label htmlFor="category">Choose a category:</label>
-            <select
-              id="category"
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-            >
-              <option value="">-- Select --</option>
-              <option value="Computer Games">Computer Games</option>
-              <option value="Musicians">Musicians</option>
-              <option value="Museums">Museums</option>
-            </select>
-            {errors.category && <p className="error-text">{errors.category}</p>}
-          </div>
-        </div>
-      </div>
-
-      <div className="item3">
-        <div className="divflex">
-          <button className="align" type="button" onClick={handleSubmit}>
-            Submit (add link)
-          </button>
         </div>
       </div>
     </div>
