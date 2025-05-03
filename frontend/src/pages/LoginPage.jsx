@@ -1,20 +1,27 @@
 import React from 'react';
-import Header from './common/Header';
-import LoginForm from './components/auth/LoginForm';
-import Footer from './common/Footer'; 
+import { Container } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import LoginForm from '../components/auth/LoginForm';
 
 const LoginPage = () => {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header showLogin={false} showSignUp={true} /> {/* Show Sign Up link, hide Login link */}
-      <main className="flex-grow container mx-auto px-4 py-8 flex justify-center items-center">
-        <div className="w-full max-w-md">
-          <h1 className="text-2xl font-bold text-center mb-6">Log In to SharLinks</h1>
-          <LoginForm />
+    <Container className='d-flex justify-content-center align-items-center'>
+      <div
+        className='w-100'
+        style={{
+          maxWidth: '320px',
+          width: '100%',
+        }}
+      >
+        <h4 className='text-center mb-4 mt-5'>Login to SharLinks</h4>
+        <LoginForm />
+        <div className='text-center mt-3'>
+          <small>
+            Don't have an account? <Link to='/signup'>Sign Up</Link>
+          </small>
         </div>
-      </main>
-      { <Footer /> }
-    </div>
+      </div>
+    </Container>
   );
 };
 

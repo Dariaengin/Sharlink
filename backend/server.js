@@ -8,7 +8,12 @@ const cookieParser = require('cookie-parser');
 
 const app = express(); // Define express app
 app.use(cookieParser());
-app.use(cors());
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    credentials: true, // ← required to access HttpOnly cookie
+  })
+);
 
 app.use('/public', express.static('public')); // Accept express to use public folder for the static frontend part
 app.set('view engine', 'ejs'); // Set ejs as a view engine

@@ -1,147 +1,93 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
 import axios from 'axios';
-import Input from './common/Input';
-import Button from './common/Button';
+import { useNavigate } from 'react-router-dom';
+import { Form, Button, Alert } from 'react-bootstrap';
 
-
-// Define backend URL (adjust if your backend runs on a different port/host)
-const API_URL = 'http://localhost:2100/api';
-
-const SignUpForm = () => {
-  const [formData, setFormData] = useState({
-    nickname: '', // Changed from username to nickname
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
-  const [error, setError] = useState(''); // State for error messages
-  const [loading, setLoading] = useState(false); // State for loading indicator
-  const navigate = useNavigate(); // Hook for navigation
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError(''); // Clear error on input change
-  };
+const SignupForm = () => {
+  const [email, setEmail] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Clear previous errors
+    setError('');
 
-    // Frontend validation
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords don't match!");
+    if (password !== confirmPassword) {
+      setError("Passwords don't match");
       return;
     }
-    if (formData.password.length < 4) {
-      setError("Password must be at least 4 characters long.");
-      return;
-    }
-    if (formData.nickname.length < 2 || formData.nickname.length > 20) {
-      setError("Nickname must be between 2 and 20 characters.");
-      return;
-    }
-    // Add more frontend validation as needed based on backend model
 
-    setLoading(true);
     try {
-      // Prepare data for backend (only nickname, email, password)
-      const { nickname, email, password } = formData;
-      const signupData = { nickname, email, password };
-
-      // Make API call to backend signup endpoint
-      const response = await axios.post(`${API_URL}/signup`, signupData, {
-        // Axios sends cookies automatically if backend sets CORS headers correctly
-        // If using credentials: withCredentials: true
-      });
-
-      console.log('Signup successful:', response.data);
-      alert('Signup successful! Please log in.'); // Simple success feedback
-
-      // Redirect to login page after successful signup
+      await axios.post(
+        'http://localhost:2100/api/signup',
+        { email, nickname, password },
+        { withCredentials: true }
+      );
       navigate('/login');
-
     } catch (err) {
+      setError(err.response?.data?.message || 'Registration failed');
       console.error('Signup error:', err);
-      // Display error message from backend response if available
-      if (err.response && err.response.data && err.response.data.error) {
-        setError(err.response.data.error);
-      } else {
-        setError('Signup failed. Please try again.'); // Generic error
-      }
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-      {error && <p className="text-red-500 text-xs italic mb-4">{error}</p>} {/* Display error message */}
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nickname">
-          Nickname
-        </label>
-        <Input
-          type="text"
-          name="nickname" // Changed from username
-          placeholder="Your Nickname (2-20 characters)"
-          value={formData.nickname}
-          onChange={handleChange}
-          required
-          minLength={2}
-          maxLength={20}
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-          Email
-        </label>
-        <Input
-          type="email"
-          name="email"
-          placeholder="your.email@example.com"
-          value={formData.email}
-          onChange={handleChange}
+    <Form onSubmit={handleSubmit}>
+      {error && <Alert variant='danger'>{error}</Alert>}
+
+      <Form.Group className='mb-3' controlId='formUsername'>
+        <Form.Label>Nickname</Form.Label>
+        <Form.Control
+          type='text'
+          placeholder='Enter your nickname'
+          value={nickname}
+          onChange={(e) => setNickname(e.target.value)}
           required
         />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-          Password
-        </label>
-        <Input
-          type="password"
-          name="password"
-          placeholder="****************** (min 4 characters)"
-          value={formData.password}
-          onChange={handleChange}
-          required
-          minLength={4}
-        />
-      </div>
-      <div className="mb-6">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="confirmPassword">
-          Confirm Password
-        </label>
-        <Input
-          type="password"
-          name="confirmPassword"
-          placeholder="******************"
-          value={formData.confirmPassword}
-          onChange={handleChange}
+      </Form.Group>
+
+      <Form.Group className='mb-3' controlId='formEmail'>
+        <Form.Label>Email</Form.Label>
+        <Form.Control
+          type='email'
+          placeholder='Enter email'
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
-      </div>
-      <div className="flex items-center justify-between">
-        <Button type="submit" disabled={loading}> {/* Disable button while loading */}
-          {loading ? 'Signing Up...' : 'Sign Up'}
+      </Form.Group>
+
+      <Form.Group className='mb-3' controlId='formPassword'>
+        <Form.Label>Password</Form.Label>
+        <Form.Control
+          type='password'
+          placeholder='Enter password'
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+      </Form.Group>
+
+      <Form.Group className='mb-3' controlId='formConfirmPassword'>
+        <Form.Label>Confirm Password</Form.Label>
+        <Form.Control
+          type='password'
+          placeholder='Confirm password'
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+        />
+      </Form.Group>
+
+      <div className='d-grid mb-3'>
+        <Button variant='primary' type='submit'>
+          Sign Up
         </Button>
-        <Link to="/login" className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
-          Already have an account? Log In
-        </Link>
       </div>
-    </form>
+    </Form>
   );
 };
 
-export default SignUpForm;
+export default SignupForm;

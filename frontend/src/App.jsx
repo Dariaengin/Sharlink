@@ -6,12 +6,11 @@ import Header from './components/common/Header';
 import Footer from './components/common/Footer';
 import Homepage from './pages/Homepage';
 import LinkPage from './pages/LinkPage';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 import ProfilePage from './pages/ProfilePage';
 import OneCollectionPage from './pages/OneCollectionPage';
-import CollectionPage from './pages/CollectionPage';
 import CollectionsListPage from './pages/CollectionsListPage';
-// import LoginPage from './pages/LoginPage';
-// import SignUpPage from './pages/SignUpPage';
 import AddLinkForm from './components/collection/AddLinkForm';
 import EditLinkForm from './components/collection/EditLinkForm';
 
@@ -31,8 +30,8 @@ function App() {
               <Route path='/link/:linkId' element={<LinkPage />} />
 
               {/* SignUp and LogIn*/}
-              {/* <Route path='/login' element={<LoginPage />} />
-              <Route path='/signup' element={<SignUpPage />} /> */}
+              <Route path='/signup' element={<SignupPage />} />
+              <Route path='/login' element={<LoginPage />} />
 
               {/* Link operations */}
               <Route

@@ -43,7 +43,7 @@ const OneCollectionPage = () => {
       <h1 className='text-center'>{collection.title}</h1>
       <p className='text-center'>{collection.description}</p>
 
-      <h2 className='mt-4'>Links in this Collection:</h2>
+      <h2 className='mt-5 mb-5'>Links in this Collection:</h2>
       <div className='row justify-content-center'>
         {links.length > 0 ? (
           links.map((link) => (
