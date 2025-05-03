@@ -1,15 +1,49 @@
-import React from 'react';
-// import SearchBar from '../components/common/SearchBar';
-import TopCollections from '../components/collection/TopCollections';
-import TopLinks from '../components/collection/TopLinks';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import SearchBar from "../components/common/SearchBar";
+import TopCollections from "../components/collection/TopCollections";
+import TopLinks from "../components/collection/TopLinks";
 
 const Homepage = () => {
-  return (
-    <div className='container mt-4'>
-      <h1 className='text-center mb-4'>Welcome to SharLinks</h1>
+  const [collections, setCollections] = useState([]);
+  const [filteredCollections, setFilteredCollections] = useState([]);
+  const navigate = useNavigate();
 
-      {/* <SearchBar /> */}
-      <TopCollections />
+  useEffect(() => {
+    const fetchCollections = async () => {
+      try {
+        const res = await axios.get("http://localhost:2100/api/collections");
+        setCollections(res.data);
+        setFilteredCollections(res.data); 
+      } catch (error) {
+        console.error("Failed to fetch collections:", error);
+      }
+    };
+
+    fetchCollections();
+  }, []);
+
+  const handleSearch = (query) => {
+    const lowerQuery = query.toLowerCase().trim();
+
+    if (!lowerQuery) {
+      setFilteredCollections(collections);
+      return;
+    }
+
+    const filtered = collections.filter((collection) =>
+      collection.title.toLowerCase().includes(lowerQuery)
+    );
+    setFilteredCollections(filtered);
+  };
+
+  return (
+    <div className="container mt-4">
+      <h1 className="text-center mb-4">Welcome to SharLinks</h1>
+
+      <SearchBar onSearch={handleSearch} />
+      <TopCollections collections={filteredCollections} />
       <TopLinks />
     </div>
   );
