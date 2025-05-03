@@ -1,37 +1,43 @@
-const jwt = require('jsonwebtoken');
+import express from "express";
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
-const isLoggedIn = (req, res, next) => {
-  const token = req.cookies.authToken;
+const router = express.Router();
 
-  if (!token) {
-    return res.status(401).json({ error: 'Access denied. No token provided.' });
-  }
-
+// Register
+router.post("/signup", async (req, res) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.userId = decoded.userId;
-    next();
+    const { nickname, email, password } = req.body;
+    const existing = await User.findOne({ email });
+    if (existing)
+      return res.status(400).json({ error: "Email already registered" });
+
+    const user = new User({ nickname, email, password });
+    await user.save();
+    res.status(201).json({ message: "User created successfully" });
   } catch (err) {
-    return res.status(400).json({ error: 'Invalid token.' });
+    res.status(500).json({ error: err.message });
   }
-};
+});
 
-const isSignUpLoginAnable = (req, res, next) => {
-  const token = req.cookies.authToken;
-
-  if (!token) {
-    return next(); // no token → can go to signup/login
-  }
-
+// Login
+router.post("/login", async (req, res) => {
   try {
-    jwt.verify(token, process.env.JWT_SECRET);
-    return res.status(403).json({ message: 'Already logged in.' });
-  } catch (err) {
-    next(); // token exists but invalid → let them re-login
-  }
-};
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user || !(await user.comparePassword(password)))
+      return res.status(401).json({ error: "Invalid email or password" });
 
-module.exports = {
-  isLoggedIn,
-  isSignUpLoginAnable,
-};
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+    res.json({
+      token,
+      user: { id: user._id, nickname: user.nickname, email: user.email },
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Login failed" });
+  }
+});
+
+export default router;
