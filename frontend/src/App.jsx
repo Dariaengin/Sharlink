@@ -10,9 +10,10 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import ProfilePage from './pages/ProfilePage';
 import OneCollectionPage from './pages/OneCollectionPage';
-import CollectionsListPage from './pages/CollectionsListPage';
+import CollectionsPage from './pages/CollectionsPage';
 import AddLinkForm from './components/collection/AddLinkForm';
 import EditLinkForm from './components/collection/EditLinkForm';
+import CreateMyCollection from './pages/CreateNewCollection';
 
 import NotFound from './pages/NotFound';
 
@@ -42,11 +43,12 @@ function App() {
 
               {/* Profile and Collections */}
               <Route path='/profile' element={<ProfilePage />} />
-              <Route path='/collection' element={<CollectionsListPage />} />
+              <Route path='/collection' element={<CollectionsPage />} />
               <Route
                 path='/collection/:collectionId'
                 element={<OneCollectionPage />}
               />
+              <Route path="/collections/new" element={<CreateMyCollection />} />
 
               {/* 404 Page */}
               <Route path='/*' element={<NotFound />} />
