@@ -40,7 +40,15 @@ const OneCollectionPage = () => {
 
   return (
     <div className='container mt-4'>
-      <h1 className='text-center'>{collection.title}</h1>
+      <div className='d-flex justify-content-between align-items-center mb-3'>
+        <h1 className='mb-0'>{collection.title}</h1>
+        <a
+          href={`/collection/${collectionId}/add-link`}
+          className='btn btn-primary'
+        >
+          + New Link
+        </a>
+      </div>
       <p className='text-center'>{collection.description}</p>
 
       <h2 className='mt-5 mb-5'>Links in this Collection:</h2>
