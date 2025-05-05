@@ -4,7 +4,6 @@ import UserInfo from "../components/profile/UserInfo";
 import CollectionList from "../components/profile/CollectionList";
 
 const ProfilePage = () => {
-  const [collections, setCollections] = useState([]);
   const [user, setUser] = useState({ username: "", email: "" });
   const [isAuthenticated, setIsAuthenticated] = useState(null); // null = loading
 
@@ -25,26 +24,8 @@ const ProfilePage = () => {
       }
     };
 
-    const fetchCollections = async () => {
-      try {
-        const res = await axios.get("/api/my-collections", {
-          withCredentials: true,
-        });
-        if (Array.isArray(res.data)) {
-          setCollections(res.data);
-        } else {
-          console.warn("Unexpected response format:", res.data);
-          setCollections([]);
-        }
-      } catch (err) {
-        console.error("Collections fetch failed", err);
-        setCollections([]);
-      }
-    };
-
     // Call both inside useEffect
     fetchUserData();
-    fetchCollections();
   }, []); // ← this was not closed
 
   if (isAuthenticated === null) {

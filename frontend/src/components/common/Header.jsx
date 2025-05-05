@@ -36,7 +36,7 @@ const Header = () => {
                 Profile
               </Nav.Link>
               <Nav.Link as={Link} to='/collection'>
-                Collection Page
+                My Collections
               </Nav.Link>
             </>
           )}
