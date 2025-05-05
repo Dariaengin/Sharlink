@@ -9,7 +9,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.get('/api/logout', { withCredentials: true });
+      await axios.get('http://localhost:2100/api/logout', { withCredentials: true });
       setIsLoggedIn(false);
       window.location.href = '/login';
     } catch (err) {
@@ -37,7 +37,7 @@ const Header = () => {
             Collection Page
           </Nav.Link>
           {isLoggedIn ? (
-            <Nav.Link onClick={handleLogout} style={{ cursor: 'pointer' }}>
+            <Nav.Link onClick={Ş} style={{ cursor: 'pointer' }}>
               <i className='bi bi-box-arrow-right me-1' />
               Log Out
             </Nav.Link>
