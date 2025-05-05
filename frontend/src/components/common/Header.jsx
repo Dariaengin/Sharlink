@@ -37,7 +37,7 @@ const Header = () => {
             Collection Page
           </Nav.Link>
           {isLoggedIn ? (
-            <Nav.Link onClick={Ş} style={{ cursor: 'pointer' }}>
+            <Nav.Link onClick={handleLogout} style={{ cursor: 'pointer' }}>
               <i className='bi bi-box-arrow-right me-1' />
               Log Out
             </Nav.Link>
