@@ -65,11 +65,6 @@ const ProfilePage = () => {
         <section className="mb-8">
           <UserInfo username={user.username} email={user.email} />
         </section>
-
-        <section>
-          <h2 className="text-2xl font-semibold mb-4">My Collections</h2>
-          <CollectionList collections={collections} />
-        </section>
       </main>
     </div>
   );
