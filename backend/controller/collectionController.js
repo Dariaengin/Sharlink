@@ -84,9 +84,48 @@ const getCollectionById = async (req, res) => {
     res.status(500).json({ message: 'Server error', error });
   }
 };
+const 
+getUserCollections = async (req, res) => {
+  try {
+    const userId = req.userId; // set by auth middleware
+    const collections = await Collection.find({ userId }).populate('linkIds');
+    res.status(200).json(collections);
+  } catch (error) {
+    console.error('Error fetching user collections:', error);
+    res.status(500).json({ error: 'Failed to fetch collections' });
+  }
+};
+const createCollection = async (req, res) => {
+  try {
+    const { title } = req.body;
+
+    if (!title || title.length < 5 || title.length > 30) {
+      return res.status(400).json({ error: 'Title must be 5–30 characters long.' });
+    }
+
+    const newCollection = new Collection({
+      title,
+      userId: req.userId, // comes from isLoggedIn middleware
+      linkIds: [],
+    });
+
+    await newCollection.save();
+
+    res.status(201).json({
+      message: 'Collection created successfully',
+      collection: newCollection,
+    });
+  } catch (error) {
+    console.error('Create collection error:', error);
+    res.status(500).json({ error: 'Failed to create collection' });
+  }
+};
+
 
 module.exports = {
   seedCollections,
   getAllCollections,
   getCollectionById,
+  getUserCollections,
+  createCollection
 };

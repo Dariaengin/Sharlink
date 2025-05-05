@@ -14,6 +14,10 @@ const collectionSchema = new mongoose.Schema(
       minlength: [5, 'Description must be at least 4 characters'],
       maxlength: [30, 'Title must be less than 31 characters'],
     },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user',
+    },
     createdAt: {
       type: Date,
       default: Date.now,
