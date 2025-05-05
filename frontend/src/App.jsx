@@ -14,6 +14,7 @@ import CollectionsPage from './pages/CollectionsPage';
 import AddLinkForm from './components/collection/AddLinkForm';
 import EditLinkForm from './components/collection/EditLinkForm';
 import CreateMyCollection from './pages/CreateNewCollection';
+import EditCollectionPage from './pages/EditCollectionPage';
 
 import NotFound from './pages/NotFound';
 
@@ -49,6 +50,7 @@ function App() {
                 element={<OneCollectionPage />}
               />
               <Route path="/collections/new" element={<CreateMyCollection />} />
+              <Route path="/collection/:collectionId/edit" element={<EditCollectionPage />} />
 
               {/* 404 Page */}
               <Route path='/*' element={<NotFound />} />

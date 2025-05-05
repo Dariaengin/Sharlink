@@ -122,11 +122,41 @@ const createCollection = async (req, res) => {
   }
 };
 
+const updateCollection = async (req, res) => {
+  try {
+    const { collectionId } = req.params;
+    const { title, coverImage } = req.body;
+
+    if (title && (title.length < 5 || title.length > 30)) {
+      return res.status(400).json({ error: 'Title must be 5–30 characters long.' });
+    }
+
+    const collection = await Collection.findOne({ _id: collectionId, userId: req.userId });
+
+    if (!collection) {
+      return res.status(404).json({ error: 'Collection not found or unauthorized' });
+    }
+
+    if (title !== undefined) collection.title = title;
+    if (coverImage !== undefined) collection.coverImage = coverImage;
+
+    await collection.save();
+
+    res.status(200).json({
+      message: 'Collection updated successfully',
+      collection,
+    });
+  } catch (error) {
+    console.error('Update collection error:', error);
+    res.status(500).json({ error: 'Failed to update collection' });
+  }
+};
 
 module.exports = {
   seedCollections,
   getAllCollections,
   getCollectionById,
   getUserCollections,
-  createCollection
+  createCollection,
+  updateCollection
 };

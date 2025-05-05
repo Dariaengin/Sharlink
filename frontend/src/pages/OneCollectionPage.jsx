@@ -42,12 +42,20 @@ const OneCollectionPage = () => {
     <div className='container mt-4'>
       <div className='d-flex justify-content-between align-items-center mb-3'>
         <h1 className='mb-0'>{collection.title}</h1>
-        <a
-          href={`/collection/${collectionId}/add-link`}
-          className='btn btn-primary'
-        >
-          + New Link
-        </a>
+        <div className='d-flex gap-2'>
+          <a
+            href={`/collection/${collectionId}/edit`}
+            className='btn btn-secondary'
+          >
+            Edit
+          </a>
+          <a
+            href={`/collection/${collectionId}/add-link`}
+            className='btn btn-primary'
+          >
+            + New Link
+          </a>
+        </div>
       </div>
       <p className='text-center'>{collection.description}</p>
 
