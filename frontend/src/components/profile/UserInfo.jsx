@@ -17,6 +17,8 @@ const UserInfo = ({ username, email, onLogout }) => {
           <strong>Email:</strong> {email}
         </p>
       </div>
+      <div className="flex justify-end">
+
 
       <button
         onClick={onLogout}
@@ -25,6 +27,7 @@ const UserInfo = ({ username, email, onLogout }) => {
         <FaSignOutAlt />
         Log Out
       </button>
+      </div>
     </div>
   );
 };
