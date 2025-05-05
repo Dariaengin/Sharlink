@@ -3,21 +3,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import CollectionCard from "../components/collection/CollectionCard";
 
-const imageMap = {
-  "Frontend Tools": "/images/Frontend-Tools-cover.jpg",
-  "JavaScript Resources": "/images/JavaScript-Resources-cover.png",
-  "Favorite Coffee Spots": "/images/Favorite-Coffee-Spots-cover.jpg",
-  "Must-See Movies": "/images/Must-See-Movies-cover.jpg",
-  "Hidden Gem Restaurants": "/images/Hidden-Gem-Restaurants-cover.jpg",
-  "Dream Travel Destinations": "/images/Dream-Travel-Destinations-cover.jpg",
-  "Inspiring Musicians": "/images/Inspiring-Musicians-cover.jpg",
-  "Cozy Bookstores": "/images/Cozy-Bookstores-cover.jpg",
-  "Weekend Getaways": "/images/Weekend-Getaways-cover.jpg",
-  "Local Art & Museums": "/images/Local-Art-Museums-cover.jpg",
-  "Best Podcasts Right Now": "/images/Best-Podcasts-Right-Now-cover.jpg",
-  "Home Decor Inspo": "/images/Home-Decor-Inspo-cover.jpeg",
-};
-
 const CollectionsPage = () => {
   const [collections, setCollections] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -75,7 +60,7 @@ const CollectionsPage = () => {
                 key={collection._id}
                 title={collection.title}
                 coverImage={
-                  imageMap[collection.title] || "https://picsum.photos/300/180"
+                  collection.coverImage || "https://picsum.photos/300/180"
                 }
                 linkCount={collection.linkIds?.length || 0}
                 onClick={() => navigate(`/collection/${collection._id}`)}

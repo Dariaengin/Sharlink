@@ -97,7 +97,7 @@ getUserCollections = async (req, res) => {
 };
 const createCollection = async (req, res) => {
   try {
-    const { title } = req.body;
+    const { title, coverImage } = req.body;
 
     if (!title || title.length < 5 || title.length > 30) {
       return res.status(400).json({ error: 'Title must be 5–30 characters long.' });
@@ -107,6 +107,7 @@ const createCollection = async (req, res) => {
       title,
       userId: req.userId, // comes from isLoggedIn middleware
       linkIds: [],
+      coverImage,
     });
 
     await newCollection.save();
