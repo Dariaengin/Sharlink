@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import LinkCard from '../components/collection/LinkCard';
 
 const OneCollectionPage = () => {
   const { collectionId } = useParams();
+  const navigate = useNavigate();
   const [collection, setCollection] = useState(null);
   const [links, setLinks] = useState([]);
 
@@ -38,11 +39,31 @@ const OneCollectionPage = () => {
 
   if (!collection) return <p>Loading collection...</p>;
 
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this collection?')) return;
+
+    try {
+      await axios.delete(`http://localhost:2100/api/collections/${collectionId}`, {
+        withCredentials: true,
+      });
+      navigate('/collection');
+    } catch (err) {
+      console.error('Failed to delete collection:', err);
+      alert('Failed to delete collection');
+    }
+  };
+
   return (
     <div className='container mt-4'>
       <div className='d-flex justify-content-between align-items-center mb-3'>
         <h1 className='mb-0'>{collection.title}</h1>
         <div className='d-flex gap-2'>
+        <button
+            onClick={handleDelete}
+            className='btn btn-danger'
+          >
+            Delete
+          </button>
           <a
             href={`/collection/${collectionId}/edit`}
             className='btn btn-secondary'

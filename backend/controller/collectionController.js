@@ -152,11 +152,32 @@ const updateCollection = async (req, res) => {
   }
 };
 
+const deleteCollection = async (req, res) => {
+  try {
+    const { collectionId } = req.params;
+
+    const collection = await Collection.findOneAndDelete({
+      _id: collectionId,
+      userId: req.userId,
+    });
+
+    if (!collection) {
+      return res.status(404).json({ error: 'Collection not found or unauthorized' });
+    }
+
+    res.status(200).json({ message: 'Collection deleted successfully' });
+  } catch (error) {
+    console.error('Delete collection error:', error);
+    res.status(500).json({ error: 'Failed to delete collection' });
+  }
+};
+
 module.exports = {
   seedCollections,
   getAllCollections,
   getCollectionById,
   getUserCollections,
   createCollection,
-  updateCollection
+  updateCollection,
+  deleteCollection
 };
