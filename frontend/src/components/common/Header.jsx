@@ -29,13 +29,17 @@ const Header = () => {
         </Navbar.Brand>
 
         <Nav className='ms-auto d-flex gap-3'>
-          <Nav.Link as={Link} to='/profile'>
-            <i className='bi bi-person-circle me-1' />
-            Profile
-          </Nav.Link>
-          <Nav.Link as={Link} to='/collection'>
-            Collection Page
-          </Nav.Link>
+          {isLoggedIn && (
+            <>
+              <Nav.Link as={Link} to='/profile'>
+                <i className='bi bi-person-circle me-1' />
+                Profile
+              </Nav.Link>
+              <Nav.Link as={Link} to='/collection'>
+                Collection Page
+              </Nav.Link>
+            </>
+          )}
           {isLoggedIn ? (
             <Nav.Link onClick={handleLogout} style={{ cursor: 'pointer' }}>
               <i className='bi bi-box-arrow-right me-1' />
