@@ -40,8 +40,16 @@ const AddLinkForm = () => {
       setFormData({ url: '', title: '', description: '', category: '' });
       setErrors({});
     } catch (error) {
-      console.error(error);
-      alert('Failed to add link');
+      console.error('Error adding link:', error);
+      if (error.response) {
+        console.error('Error response data:', error.response.data);
+        console.error('Error response status:', error.response.status);
+      } else if (error.request) {
+        console.error('Error request:', error.request);
+      } else {
+        console.error('Error message:', error.message);
+      }
+      alert('Failed to add link. Check console for details.');
     }
   };
 
@@ -135,4 +143,3 @@ const AddLinkForm = () => {
 };
 
 export default AddLinkForm;
-

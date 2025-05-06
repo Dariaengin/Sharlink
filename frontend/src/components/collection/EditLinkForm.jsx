@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -21,12 +20,23 @@ const EditLinkForm = () => {
         const res = await axios.get(`/api/links/${linkId}`);
         setFormData(res.data);
       } catch (error) {
-        console.error(error);
-        alert('Failed to load link');
+        console.error(`Error fetching link ${linkId}:`, error);
+        if (error.response) {
+          console.error('Error response data:', error.response.data);
+          console.error('Error response status:', error.response.status);
+        } else if (error.request) {
+          console.error('Error request:', error.request);
+        } else {
+          console.error('Error message:', error.message);
+        }
+        alert('Failed to load link. Check console for details.');
       }
     };
 
-    fetchLink();
+    if (linkId) {
+      fetchLink();
+    }
+
   }, [linkId]);
 
   const handleChange = (e) => {
@@ -54,8 +64,16 @@ const EditLinkForm = () => {
       await axios.put(`/api/links/${linkId}`, formData);
       alert('Link updated successfully!');
     } catch (error) {
-      console.error(error);
-      alert('Failed to update link');
+      console.error(`Error updating link ${linkId}:`, error);
+       if (error.response) {
+        console.error('Error response data:', error.response.data);
+        console.error('Error response status:', error.response.status);
+      } else if (error.request) {
+        console.error('Error request:', error.request);
+      } else {
+        console.error('Error message:', error.message);
+      }
+      alert('Failed to update link. Check console for details.');
     }
   };
 
@@ -159,4 +177,3 @@ const EditLinkForm = () => {
 };
 
 export default EditLinkForm;
-
