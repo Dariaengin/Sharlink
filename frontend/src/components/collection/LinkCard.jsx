@@ -1,35 +1,28 @@
+// components/collection/LinkCard.jsx
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-const LinkCard = ({ title, coverImage, description, url }) => {
+const LinkCard = ({ title, description, url, user }) => {
   return (
     <div className='col-md-3 col-sm-6 mb-4 d-flex align-items-stretch'>
-      <div className='card w-100 shadow-sm'>
-        <img
-          src={coverImage}
-          className='card-img-top'
-          alt={title}
-          style={{ height: '180px', objectFit: 'cover' }}
-        />
-        <div className='card-body d-flex flex-column text-center'>
-          <h5
-            className='card-title text-truncate mb-2'
-            style={{ minHeight: '60px', lineHeight: '1.2' }}
-          >
-            {title}
-          </h5>
-          <p className='text-muted small mb-3' style={{ flexGrow: 1 }}>
-            {description}
-          </p>
-          <a
-            href={url}
-            target='_blank'
-            rel='noopener noreferrer'
-            className='text-primary d-flex justify-content-center align-items-center'
-            style={{ textDecoration: 'none' }}
-          >
-            Follow the link
-            <i className='bi bi-arrow-right ms-2'></i>
-          </a>
+      <div className='card w-100 shadow-sm d-flex flex-column'>
+        <div className='card-body d-flex flex-column text-center flex-grow-1'>
+          <h5 className='card-title text-truncate mb-2'>{title}</h5>
+          <p className='text-muted small mb-2'>{description}</p>
+          {user && (
+            <p className='text-muted small mb-3'>
+              Added by: {user.nickname || 'Unknown'}
+            </p>
+          )}
+          <div className='mt-auto'>
+            <Link
+              to={url}
+              className='text-primary d-flex justify-content-center align-items-center'
+              style={{ textDecoration: 'none' }}
+            >
+              View Link Info<i className='bi bi-arrow-right ms-2'></i>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

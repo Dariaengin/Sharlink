@@ -1,7 +1,7 @@
-import React from 'react';
-import { FaUser, FaEnvelope, FaSignOutAlt } from 'react-icons/fa';
+import React from "react";
+import { FaUser, FaEnvelope, FaSignOutAlt } from "react-icons/fa";
 
-const UserInfo = ({ username, email, onLogout }) => {
+const UserInfo = ({ username, email }) => {
   return (
     <div className="p-6 bg-gray-50 border rounded-md shadow-md">
       <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
@@ -17,14 +17,6 @@ const UserInfo = ({ username, email, onLogout }) => {
           <strong>Email:</strong> {email}
         </p>
       </div>
-
-      <button
-        onClick={onLogout}
-        className="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-      >
-        <FaSignOutAlt />
-        Log Out
-      </button>
     </div>
   );
 };
