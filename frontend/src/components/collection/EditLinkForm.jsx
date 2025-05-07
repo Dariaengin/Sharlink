@@ -17,7 +17,8 @@ const EditLinkForm = () => {
   useEffect(() => {
     const fetchLink = async () => {
       try {
-        const res = await axios.get(`/api/links/${linkId}`);
+        // Corrected line: Use the full backend URL
+        const res = await axios.get(`http://localhost:2100/api/links/${linkId}`);
         setFormData(res.data);
       } catch (error) {
         console.error(`Error fetching link ${linkId}:`, error);
@@ -61,7 +62,7 @@ const EditLinkForm = () => {
     }
 
     try {
-      await axios.put(`/api/links/${linkId}`, formData);
+      await axios.put(`http://localhost:2100/api/links/${linkId}`, formData);
       alert('Link updated successfully!');
     } catch (error) {
       console.error(`Error updating link ${linkId}:`, error);
