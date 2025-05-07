@@ -20,6 +20,10 @@ router.get(
   '/collections/:collectionId',
   collectionController.getCollectionById
 );
+// AI Search route
+const aiSearchRoute = require('../routes/aiSearch');
+router.use("/ai-search", aiSearchRoute);
+
 
 // Link routes
 router.post('/links', userAuth.isLoggedIn, linkController.createLink); // Only authorized user can add link

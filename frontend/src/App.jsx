@@ -13,7 +13,7 @@ import OneCollectionPage from './pages/OneCollectionPage';
 import CollectionsListPage from './pages/CollectionsListPage';
 import AddLinkForm from './components/collection/AddLinkForm';
 import EditLinkForm from './components/collection/EditLinkForm';
-
+import AISearch from "./pages/AISearch";
 import NotFound from './pages/NotFound';
 
 import './App.css';
@@ -21,35 +21,37 @@ import './App.css';
 function App() {
   return (
     <Router>
-      <div className='d-flex flex-column min-vh-100'>
+      <div className="d-flex flex-column min-vh-100">
         <Header />
-        <main className='flex-grow-1 d-flex flex-column'>
-          <Container fluid='md' className='py-4'>
+        <main className="flex-grow-1 d-flex flex-column">
+          <Container fluid="md" className="py-4">
             <Routes>
-              <Route path='/' element={<Homepage />} />
-              <Route path='/link/:linkId' element={<LinkPage />} />
+              <Route path="/" element={<Homepage />} />
+              <Route path="/link/:linkId" element={<LinkPage />} />
 
               {/* SignUp and LogIn*/}
-              <Route path='/signup' element={<SignupPage />} />
-              <Route path='/login' element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
+              <Route path="/login" element={<LoginPage />} />
 
               {/* Link operations */}
               <Route
-                path='/collection/:collectionId/add-link'
+                path="/collection/:collectionId/add-link"
                 element={<AddLinkForm />}
               />
-              <Route path='/link/:linkId/edit' element={<EditLinkForm />} />
+              <Route path="/link/:linkId/edit" element={<EditLinkForm />} />
+              {/* ai-search */}
+              <Route path="/ai-search" element={<AISearch />} />
 
               {/* Profile and Collections */}
-              <Route path='/profile' element={<ProfilePage />} />
-              <Route path='/collection' element={<CollectionsListPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/collection" element={<CollectionsListPage />} />
               <Route
-                path='/collection/:collectionId'
+                path="/collection/:collectionId"
                 element={<OneCollectionPage />}
               />
 
               {/* 404 Page */}
-              <Route path='/*' element={<NotFound />} />
+              <Route path="/*" element={<NotFound />} />
             </Routes>
           </Container>
         </main>
