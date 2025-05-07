@@ -172,6 +172,29 @@ const deleteCollection = async (req, res) => {
   }
 };
 
+
+const likeCollection = async (req, res) => {
+  try {
+    const collection = await Collection.findById(req.params.collectionId);
+    if (!collection) return res.status(404).json({ error: 'Collection not found' });
+
+    // Prevent duplicate likes by checking userId
+    if (collection.likedBy.includes(req.userId)) {
+      return res.status(400).json({ error: 'Already liked' });
+    }
+
+    // Increase likes
+    collection.likes = (collection.likes || 0) + 1;
+    collection.likedBy.push(req.userId);
+
+    await collection.save();
+    res.status(200).json({ likes: collection.likes });
+  } catch (error) {
+    console.error('Like error:', error);
+    res.status(500).json({ error: 'Failed to like collection' });
+  }
+};
+
 module.exports = {
   seedCollections,
   getAllCollections,
@@ -179,5 +202,6 @@ module.exports = {
   getUserCollections,
   createCollection,
   updateCollection,
-  deleteCollection
+  deleteCollection,
+  likeCollection,
 };
