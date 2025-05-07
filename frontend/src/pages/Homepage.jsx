@@ -24,19 +24,28 @@ const Homepage = () => {
     fetchCollections();
   }, []);
 
-  const handleSearch = (query) => {
-    const lowerQuery = query.toLowerCase().trim();
+ const handleSearch = (query) => {
+   const lowerQuery = query.toLowerCase().trim();
 
-    if (!lowerQuery) {
-      setFilteredCollections(collections);
-      return;
-    }
+   if (!lowerQuery) {
+     setFilteredCollections(collections);
+     return;
+   }
 
-    const filtered = collections.filter((collection) =>
-      collection.title.toLowerCase().includes(lowerQuery)
-    );
-    setFilteredCollections(filtered);
-  };
+   const filtered = collections.filter((collection) => {
+     const matchesCollectionTitle = collection.title
+       .toLowerCase()
+       .includes(lowerQuery);
+
+     const matchesLinkTitle = collection.linkIds?.some((link) =>
+       link?.title?.toLowerCase().includes(lowerQuery)
+     );
+
+     return matchesCollectionTitle || matchesLinkTitle;
+   });
+
+   setFilteredCollections(filtered);
+ };
 
   return (
     <div className="container mt-4">
