@@ -27,6 +27,18 @@ const createLink = async (req, res) => {
     res.status(201).json(newLink);
   } catch (error) {
     console.error('Create Link Error:', error);
+
+    // Handling Mongoose Validation Errors
+    if (error.name === 'ValidationError') {
+      const validationErrors = {};
+
+      for (let field in error.errors) {
+        validationErrors[field] = error.errors[field].message;
+      }
+
+      return res.status(400).json({ errors: validationErrors });
+    }
+
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -94,10 +106,20 @@ const deleteLink = async (req, res) => {
   try {
     const { linkId } = req.params;
 
-    const deleted = await Link.findByIdAndDelete(linkId);
-
-    if (!deleted) {
+    // Find the link to get the collectionId
+    const link = await Link.findById(linkId);
+    if (!link) {
       return res.status(404).json({ error: 'Link not found' });
+    }
+
+    // Delete the link
+    await Link.findByIdAndDelete(linkId);
+
+    // Remove linkId from collection.linkIds
+    if (link.collectionId) {
+      await Collection.findByIdAndUpdate(link.collectionId, {
+        $pull: { linkIds: link._id },
+      });
     }
 
     res.status(200).json({ message: 'Link deleted successfully' });

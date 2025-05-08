@@ -1,4 +1,3 @@
-
 const express = require('express'); // Import Express module
 const cors = require('cors');
 const apiRoutes = require('./config/apiRoutes'); // Import API Routes configuration
@@ -16,8 +15,6 @@ app.use(
   })
 );
 
-app.use('/public', express.static('public')); // Accept express to use public folder for the static frontend part
-app.set('view engine', 'ejs'); // Set ejs as a view engine
 app.use(express.urlencoded({ extended: true })); //Accept JSON in the request
 app.use(express.json()); // Accept express to use JSON in the response
 
