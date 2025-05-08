@@ -31,8 +31,8 @@ const linkSchema = new mongoose.Schema(
     description: {
       type: String,
       required: false,
-      minlength: [5, 'Description must be at least 4 characters'],
-      maxlength: [200, 'Description must be less than 201 characters'],
+      // minlength: [5, 'Description must be at least 4 characters'],
+      // maxlength: [200, 'Description must be less than 201 characters'],
     },
 
     createdAt: {
