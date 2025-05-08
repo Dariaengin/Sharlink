@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom'; // Add this line
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const AddLinkForm = ({ onSuccess }) => {
+const AddLinkForm = () => {
+  const { collectionId } = useParams();
+  const navigate = useNavigate();
+
+  const [collectionTitle, setCollectionTitle] = useState('');
+
   const [formData, setFormData] = useState({
     url: '',
     title: '',
@@ -25,6 +31,16 @@ const AddLinkForm = ({ onSuccess }) => {
     };
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    if (collectionId) {
+      setFormData((prev) => ({ ...prev, collectionId }));
+      axios
+        .get(`http://localhost:2100/api/collections/${collectionId}`)
+        .then((res) => setCollectionTitle(res.data.title))
+        .catch((err) => console.error('Error fetching collection title:', err));
+    }
+  }, [collectionId]);
 
   const handleChange = (e) => {
     setFormData({
@@ -71,6 +87,9 @@ const AddLinkForm = ({ onSuccess }) => {
       <div className='row'>
         <div className='col-12 col-md-6'>
           <div className='bg-light p-4 rounded h-100 d-flex flex-column justify-content-between'>
+            {collectionTitle && (
+              <h5 className='mb-3'>Adding link to: <strong>{collectionTitle}</strong></h5>
+            )}
             <form className='d-flex flex-column gap-3' onSubmit={handleSubmit}>
               <input
                 type='text'
