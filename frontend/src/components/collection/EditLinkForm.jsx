@@ -76,7 +76,7 @@ const EditLinkForm = () => {
         withCredentials: true,
       });
       alert('Link updated successfully!');
-      navigate('/collection');
+      navigate(`/link/${linkId}`);
     } catch (error) {
       console.error(`Error updating link ${linkId}:`, error);
       alert('Failed to update link. Check console for details.');

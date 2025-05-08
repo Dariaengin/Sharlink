@@ -64,7 +64,7 @@ const AddLinkForm = ({ onSuccess }) => {
     }
 
     try {
-      await axios.post('http://localhost:2100/api/links', formData, {
+      var newLink = await axios.post('http://localhost:2100/api/links', formData, {
         withCredentials: true,
       });
       alert('Link added successfully!');
@@ -73,7 +73,7 @@ const AddLinkForm = ({ onSuccess }) => {
       if (onSuccess) {
         onSuccess(formData.collectionId);
       }
-      navigate('/collection?added=1');
+      navigate(`/link/${newLink.data._id}`);
     } catch (error) {
       console.error('Error adding link:', error);
       alert('Failed to add link. Check console for details.');
