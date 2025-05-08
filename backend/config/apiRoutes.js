@@ -42,6 +42,11 @@ router.post(
   userAuth.isLoggedIn,
   collectionController.likeCollection
 );
+router.post(
+  '/collections/:collectionId/unlike',
+  userAuth.isLoggedIn,
+  collectionController.unlikeCollection
+);
 
 // Link routes
 router.post('/links', userAuth.isLoggedIn, linkController.createLink); // Only authorized user can add link
