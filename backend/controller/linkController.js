@@ -4,9 +4,9 @@ const Link = require('../models/linkModel');
 // Create new link
 const createLink = async (req, res) => {
   try {
-    const { url, title, description, collectionId, userId } = req.body;
+    const { url, title, description, collectionId } = req.body;
 
-    if (!url || !title || !collectionId || !userId) {
+    if (!url || !title || !collectionId) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -15,7 +15,7 @@ const createLink = async (req, res) => {
       title,
       description,
       collectionId,
-      userId,
+      userId: req.userId, // comes from isLoggedIn middleware
     });
 
     await newLink.save();

@@ -6,7 +6,7 @@ const AddLinkForm = () => {
     url: '',
     title: '',
     description: '',
-    category: '',
+    collectionId: '',
   });
 
   const [errors, setErrors] = useState({});
@@ -34,7 +34,7 @@ const AddLinkForm = () => {
   const validate = () => {
     const newErrors = {};
     if (!formData.url.trim()) newErrors.url = 'URL is required';
-    if (!formData.category) newErrors.category = 'Category is required';
+    if (!formData.collectionId) newErrors.collectionId = 'Category is required';
     return newErrors;
   };
 
@@ -52,7 +52,7 @@ const AddLinkForm = () => {
         withCredentials: true,
       });
       alert('Link added successfully!');
-      setFormData({ url: '', title: '', description: '', category: '' });
+      setFormData({ url: '', title: '', description: '', collectionId: '' });
       setErrors({});
     } catch (error) {
       console.error('Error adding link:', error);
@@ -61,52 +61,52 @@ const AddLinkForm = () => {
   };
 
   return (
-    <div className="container py-4">
-      <div className="row">
-        <div className="col-12 col-md-6">
-          <div className="bg-light p-4 rounded h-100 d-flex flex-column justify-content-between">
-            <form className="d-flex flex-column gap-3" onSubmit={handleSubmit}>
+    <div className='container py-4'>
+      <div className='row'>
+        <div className='col-12 col-md-6'>
+          <div className='bg-light p-4 rounded h-100 d-flex flex-column justify-content-between'>
+            <form className='d-flex flex-column gap-3' onSubmit={handleSubmit}>
               <input
-                type="text"
-                name="url"
-                placeholder="URL"
+                type='text'
+                name='url'
+                placeholder='URL'
                 value={formData.url}
                 onChange={handleChange}
               />
-              {errors.url && <div className="text-danger">{errors.url}</div>}
+              {errors.url && <div className='text-danger'>{errors.url}</div>}
 
               <input
-                type="text"
-                name="title"
-                placeholder="Title"
+                type='text'
+                name='title'
+                placeholder='Title'
                 value={formData.title}
                 onChange={handleChange}
               />
 
               <textarea
-                name="description"
-                placeholder="Description"
+                name='description'
+                placeholder='Description'
                 value={formData.description}
                 onChange={handleChange}
               />
 
               <select
-                name="category"
-                value={formData.category}
+                name='collectionId'
+                value={formData.collectionId}
                 onChange={handleChange}
               >
-                <option value="">Select a category</option>
+                <option value=''>Select a category</option>
                 {categories.map((cat) => (
                   <option key={cat._id} value={cat._id}>
                     {cat.title}
                   </option>
                 ))}
               </select>
-              {errors.category && (
-                <div className="text-danger">{errors.category}</div>
+              {errors.collectionId && (
+                <div className='text-danger'>{errors.collectionId}</div>
               )}
 
-              <button type="submit">Add Link</button>
+              <button type='submit'>Add Link</button>
             </form>
           </div>
         </div>
