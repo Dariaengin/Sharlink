@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom'; // Add this line
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
-const AddLinkForm = () => {
+const AddLinkForm = ({ onSuccess }) => {
   const { collectionId } = useParams();
-  const navigate = useNavigate();
 
   const [collectionTitle, setCollectionTitle] = useState('');
 
