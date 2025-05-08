@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const AddLinkForm = () => {
@@ -6,10 +6,23 @@ const AddLinkForm = () => {
     url: '',
     title: '',
     description: '',
-    category: '',
+    collectionId: '',
   });
 
   const [errors, setErrors] = useState({});
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await axios.get('http://localhost:2100/api/collections');
+        setCategories(res.data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -21,7 +34,7 @@ const AddLinkForm = () => {
   const validate = () => {
     const newErrors = {};
     if (!formData.url.trim()) newErrors.url = 'URL is required';
-    if (!formData.category) newErrors.category = 'Category is required';
+    if (!formData.collectionId) newErrors.collectionId = 'Category is required';
     return newErrors;
   };
 
@@ -35,98 +48,66 @@ const AddLinkForm = () => {
     }
 
     try {
-      await axios.post('/api/links', formData);
+      await axios.post('http://localhost:2100/api/links', formData, {
+        withCredentials: true,
+      });
       alert('Link added successfully!');
-      setFormData({ url: '', title: '', description: '', category: '' });
+      setFormData({ url: '', title: '', description: '', collectionId: '' });
       setErrors({});
     } catch (error) {
-      console.error(error);
-      alert('Failed to add link');
+      console.error('Error adding link:', error);
+      alert('Failed to add link. Check console for details.');
     }
   };
 
   return (
-    <div className="container py-4">
-      <div className="row">
-        <div className="col-12 col-md-6">
-          <div className="bg-light p-4 rounded h-100 d-flex flex-column justify-content-between">
+    <div className='container py-4'>
+      <div className='row'>
+        <div className='col-12 col-md-6'>
+          <div className='bg-light p-4 rounded h-100 d-flex flex-column justify-content-between'>
+            <form className='d-flex flex-column gap-3' onSubmit={handleSubmit}>
+              <input
+                type='text'
+                name='url'
+                placeholder='URL'
+                value={formData.url}
+                onChange={handleChange}
+              />
+              {errors.url && <div className='text-danger'>{errors.url}</div>}
 
-            <form className="d-flex flex-column gap-3" onSubmit={handleSubmit}>
+              <input
+                type='text'
+                name='title'
+                placeholder='Title'
+                value={formData.title}
+                onChange={handleChange}
+              />
 
-              <div className="row align-items-center">
-                <label htmlFor="url" className="col-sm-3 col-form-label">
-                  URL<span className="text-danger">*</span>
-                </label>
-                <div className="col-sm-9">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="url"
-                    name="url"
-                    value={formData.url}
-                    onChange={handleChange}
-                  />
-                  {errors.url && <div className="text-danger small">{errors.url}</div>}
-                </div>
-              </div>
+              <textarea
+                name='description'
+                placeholder='Description'
+                value={formData.description}
+                onChange={handleChange}
+              />
 
-              <div className="row align-items-center">
-                <label htmlFor="title" className="col-sm-3 col-form-label">Title</label>
-                <div className="col-sm-9">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="title"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
+              <select
+                name='collectionId'
+                value={formData.collectionId}
+                onChange={handleChange}
+              >
+                <option value=''>Select a category</option>
+                {categories.map((cat) => (
+                  <option key={cat._id} value={cat._id}>
+                    {cat.title}
+                  </option>
+                ))}
+              </select>
+              {errors.collectionId && (
+                <div className='text-danger'>{errors.collectionId}</div>
+              )}
 
-              <div className="row align-items-center">
-                <label htmlFor="description" className="col-sm-3 col-form-label">Description</label>
-                <div className="col-sm-9">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="description"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-
-              <div className="row align-items-center">
-                <label htmlFor="category" className="col-sm-3 col-form-label">
-                  Category<span className="text-danger">*</span>
-                </label>
-                <div className="col-sm-9">
-                  <select
-                    id="category"
-                    name="category"
-                    className="form-select"
-                    value={formData.category}
-                    onChange={handleChange}
-                  >
-                    <option value="">-- Select --</option>
-                    <option value="Computer Games">Computer Games</option>
-                    <option value="Musicians">Musicians</option>
-                    <option value="Museums">Museums</option>
-                  </select>
-                  {errors.category && <div className="text-danger small">{errors.category}</div>}
-                </div>
-              </div>
-
-              <div className="d-flex justify-content-end mt-auto">
-                <button type="submit" className="btn btn-primary">
-                  Submit (add link)
-                </button>
-              </div>
-
+              <button type='submit'>Add Link</button>
             </form>
-
           </div>
         </div>
       </div>
