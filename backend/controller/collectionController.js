@@ -62,7 +62,7 @@ const seedCollections = async (req, res) => {
 // Get all collections
 const getAllCollections = async (req, res) => {
   try {
-    const collections = await Collection.find().populate('linkIds');
+    const collections = await Collection.find().populate("linkIds", "title");
     res.status(200).json(collections);
   } catch (err) {
     console.error('Get collections error:', err);
@@ -75,7 +75,7 @@ const getCollectionById = async (req, res) => {
   try {
     const collection = await Collection.findById(
       req.params.collectionId
-    ).populate('linkIds');
+    ).populate("linkIds", "title");
     if (!collection) {
       return res.status(404).json({ message: 'Collection not found' });
     }
@@ -88,7 +88,10 @@ const
 getUserCollections = async (req, res) => {
   try {
     const userId = req.userId; // set by auth middleware
-    const collections = await Collection.find({ userId }).populate('linkIds');
+    const collections = await Collection.find({ userId }).populate(
+      "linkIds",
+      "title"
+    );
     res.status(200).json(collections);
   } catch (error) {
     console.error('Error fetching user collections:', error);

@@ -18,36 +18,42 @@ const imageMap = {
   'Home Decor Inspo': '/images/Home-Decor-Inspo-cover.jpeg',
 };
 
-const TopCollections = () => {
-  const [collections, setCollections] = useState([]);
-  const [likes, setLikes] = useState({});
+const TopCollections = ({ collections = [] }) => {
+  const [sortedByLikesCol, setSortedByLikesCol] = useState([]);
   const navigate = useNavigate();
 
   const { user } = useAuth();
   const currentUserId = user?._id;
 
   useEffect(() => {
-    const fetchCollections = async () => {
-      try {
-        const res = await axios.get('http://localhost:2100/api/collections');
-        const sortedCollections = res.data.sort((a, b) => (b.likes || 0) - (a.likes || 0));
-        setCollections(sortedCollections);
-      } catch (error) {
-        console.error('Failed to fetch collections:', error);
-      }
-    };
+    console.log(collections);
 
-    fetchCollections();
-  }, []);
+    const sortedCollections = collections.sort(
+      (a, b) => (b.likes || 0) - (a.likes || 0)
+    );
+    setSortedByLikesCol(sortedCollections);
+  }, [collections]);
 
   const handleLike = async (collectionId, alreadyLiked) => {
     try {
       const endpoint = alreadyLiked ? 'unlike' : 'like';
       await axios.post(`http://localhost:2100/api/collections/${collectionId}/${endpoint}`, {}, { withCredentials: true });
 
-      const res = await axios.get('http://localhost:2100/api/collections');
-      const sortedCollections = res.data.sort((a, b) => (b.likes || 0) - (a.likes || 0));
-      setCollections(sortedCollections);
+      // Refresh and sort collections after like
+      const foundCol = sortedByLikesCol.map((col) => {
+
+        if (col._id === collectionId) {
+          return {
+            ...col,
+            likes: col.likes + 1,
+          };
+        }
+        return col;
+      });
+      const sortedCollections = foundCol.sort(
+        (a, b) => (b.likes || 0) - (a.likes || 0)
+      );
+      setSortedByLikesCol(sortedCollections);
     } catch (error) {
       console.error(`Failed to ${alreadyLiked ? 'unlike' : 'like'} collection:`, error);
       alert(`Something went wrong while trying to ${alreadyLiked ? 'unlike' : 'like'} the collection.`);
@@ -58,7 +64,7 @@ const TopCollections = () => {
     <section className='mt-5'>
       <h2 className='text-center mb-4'>Top Collections</h2>
       <div className='row justify-content-center'>
-        {collections.map((collection) => (
+        {sortedByLikesCol.map((collection) => (
           <div
             key={collection._id}
             className='col-md-3 col-sm-6 mb-4 d-flex align-items-stretch'
@@ -96,7 +102,7 @@ const TopCollections = () => {
                     handleLike(collection._id, alreadyLiked);
                   }}
                 >
-                  ❤️ {likes[collection._id] ?? collection.likes ?? 0}
+                  ❤️ {collection.likes ?? 0}
                 </button>
               </div>
             </div>
