@@ -45,14 +45,21 @@ const CollectionsPage = () => {
       <main className="container mx-auto px-4 py-8 flex-grow">
         <div className="d-flex justify-content-between align-items-center mb-5">
           <h2 className="text-2xl font-bold">My Collections</h2>
-          <button
-            className="btn btn-success"
-            onClick={() => navigate("/collections/new")}
-          >
-            + Add new collection
-          </button>
+          <div className="d-flex gap-2">
+            <button
+              className="btn btn-success"
+              onClick={() => navigate("/collection/add-link")}
+            >
+              + Add new link
+            </button>
+            <button
+              className="btn btn-success"
+              onClick={() => navigate("/collections/new")}
+            >
+              + Add new collection
+            </button>
+          </div>
         </div>
-
         {collections.length > 0 ? (
           <div className="row justify-content-center">
             {collections.map((collection) => (
