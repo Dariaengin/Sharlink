@@ -63,7 +63,9 @@ const EditLinkForm = () => {
     }
 
     try {
-      await axios.put(`http://localhost:2100/api/links/${linkId}`, formData);
+      await axios.put(`http://localhost:2100/api/links/${linkId}`, formData, {
+              withCredentials: true,
+            });
       alert('Link updated successfully!');
     } catch (error) {
       console.error(`Error updating link ${linkId}:`, error);
