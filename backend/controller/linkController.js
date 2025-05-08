@@ -1,5 +1,5 @@
 const Link = require('../models/linkModel');
-// const Comment = require('../models/comment');
+const Collection = require('../models/collectionModel');
 
 // Create new link
 const createLink = async (req, res) => {
@@ -19,6 +19,11 @@ const createLink = async (req, res) => {
     });
 
     await newLink.save();
+
+    await Collection.findByIdAndUpdate(collectionId, {
+      $push: { linkIds: newLink._id },
+    });
+
     res.status(201).json(newLink);
   } catch (error) {
     console.error('Create Link Error:', error);
