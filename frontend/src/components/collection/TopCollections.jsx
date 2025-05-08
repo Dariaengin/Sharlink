@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useAuth } from '../auth/AuthContext';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -21,6 +22,9 @@ const TopCollections = ({ collections = [] }) => {
   const [sortedByLikesCol, setSortedByLikesCol] = useState([]);
   const navigate = useNavigate();
 
+  const { user } = useAuth();
+  const currentUserId = user?._id;
+
   useEffect(() => {
     console.log(collections);
 
@@ -30,40 +34,38 @@ const TopCollections = ({ collections = [] }) => {
     setSortedByLikesCol(sortedCollections);
   }, [collections]);
 
-  const handleLike = async (collectionId) => {
+  const handleLike = async (collectionId, alreadyLiked) => {
     try {
+      const endpoint = alreadyLiked ? 'unlike' : 'like';
       await axios.post(
-        `http://localhost:2100/api/collections/${collectionId}/like`,
+        `http://localhost:2100/api/collections/${collectionId}/${endpoint}`,
         {},
         { withCredentials: true }
       );
 
-      // Refresh and sort collections after like
-      const foundCol = sortedByLikesCol.map((col) => {
-
+      // Update local state
+      const updatedCollections = sortedByLikesCol.map((col) => {
         if (col._id === collectionId) {
+          const updatedLikedBy = alreadyLiked
+            ? col.likedBy.filter((id) => id !== currentUserId)
+            : [...(col.likedBy || []), currentUserId];
+
           return {
             ...col,
-            likes: col.likes + 1,
+            likedBy: updatedLikedBy,
+            likes: alreadyLiked ? col.likes - 1 : col.likes + 1,
           };
         }
         return col;
       });
-      const sortedCollections = foundCol.sort(
+
+      const sortedCollections = updatedCollections.sort(
         (a, b) => (b.likes || 0) - (a.likes || 0)
       );
       setSortedByLikesCol(sortedCollections);
     } catch (error) {
-      if (
-        error.response &&
-        error.response.status === 400 &&
-        error.response.data?.error === 'Already liked'
-      ) {
-        alert('You have already liked this collection.');
-      } else {
-        console.error('Failed to like collection:', error);
-        alert('Something went wrong while liking the collection.');
-      }
+      console.error(`Failed to ${alreadyLiked ? 'unlike' : 'like'} collection:`, error);
+      alert(`Something went wrong while trying to ${alreadyLiked ? 'unlike' : 'like'} the collection.`);
     }
   };
 
@@ -98,10 +100,15 @@ const TopCollections = ({ collections = [] }) => {
                   {collection.linkIds?.length || 0} links
                 </p>
                 <button
-                  className='btn btn-sm btn-outline-primary mt-auto'
+                  className={`btn btn-sm mt-auto ${
+                    collection.likedBy?.includes(currentUserId)
+                      ? 'btn-outline-danger'
+                      : 'btn-outline-primary'
+                  }`}
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevent navigating to the collection page
-                    handleLike(collection._id);
+                    e.stopPropagation();
+                    const alreadyLiked = collection.likedBy?.includes(currentUserId);
+                    handleLike(collection._id, alreadyLiked);
                   }}
                 >
                   ❤️ {collection.likes ?? 0}
