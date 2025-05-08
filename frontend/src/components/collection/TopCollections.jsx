@@ -37,20 +37,29 @@ const TopCollections = ({ collections = [] }) => {
   const handleLike = async (collectionId, alreadyLiked) => {
     try {
       const endpoint = alreadyLiked ? 'unlike' : 'like';
-      await axios.post(`http://localhost:2100/api/collections/${collectionId}/${endpoint}`, {}, { withCredentials: true });
+      await axios.post(
+        `http://localhost:2100/api/collections/${collectionId}/${endpoint}`,
+        {},
+        { withCredentials: true }
+      );
 
-      // Refresh and sort collections after like
-      const foundCol = sortedByLikesCol.map((col) => {
-
+      // Update local state
+      const updatedCollections = sortedByLikesCol.map((col) => {
         if (col._id === collectionId) {
+          const updatedLikedBy = alreadyLiked
+            ? col.likedBy.filter((id) => id !== currentUserId)
+            : [...(col.likedBy || []), currentUserId];
+
           return {
             ...col,
-            likes: col.likes + 1,
+            likedBy: updatedLikedBy,
+            likes: alreadyLiked ? col.likes - 1 : col.likes + 1,
           };
         }
         return col;
       });
-      const sortedCollections = foundCol.sort(
+
+      const sortedCollections = updatedCollections.sort(
         (a, b) => (b.likes || 0) - (a.likes || 0)
       );
       setSortedByLikesCol(sortedCollections);
