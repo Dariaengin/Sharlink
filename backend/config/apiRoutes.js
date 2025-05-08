@@ -22,10 +22,26 @@ router.get(
   collectionController.getCollectionById
 );
 router.get('/my-collections', userAuth.isLoggedIn, getUserCollections);
-router.post('/collections/new', userAuth.isLoggedIn, collectionController.createCollection);
-router.put('/collections/:collectionId', userAuth.isLoggedIn, collectionController.updateCollection);
-router.delete('/collections/:collectionId', userAuth.isLoggedIn, collectionController.deleteCollection);
-router.post('/collections/:collectionId/like', userAuth.isLoggedIn, collectionController.likeCollection);
+router.post(
+  '/collections/new',
+  userAuth.isLoggedIn,
+  collectionController.createCollection
+);
+router.put(
+  '/collections/:collectionId',
+  userAuth.isLoggedIn,
+  collectionController.updateCollection
+);
+router.delete(
+  '/collections/:collectionId',
+  userAuth.isLoggedIn,
+  collectionController.deleteCollection
+);
+router.post(
+  '/collections/:collectionId/like',
+  userAuth.isLoggedIn,
+  collectionController.likeCollection
+);
 
 // Link routes
 router.post('/links', userAuth.isLoggedIn, linkController.createLink); // Only authorized user can add link
@@ -43,5 +59,9 @@ router.delete(
   isLinkOwner,
   linkController.deleteLink
 ); // Only a logged in user and owner can delete their link.
+
+// AI Search route
+const aiSearchRoute = require('../routes/aiSearch');
+router.use('/ai-search', aiSearchRoute);
 
 module.exports = router;

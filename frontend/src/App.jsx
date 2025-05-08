@@ -13,6 +13,7 @@ import OneCollectionPage from './pages/OneCollectionPage';
 import CollectionsPage from './pages/CollectionsPage';
 import AddLinkForm from './components/collection/AddLinkForm';
 import EditLinkForm from './components/collection/EditLinkForm';
+import AISearch from './pages/AISearch';
 import CreateMyCollection from './pages/CreateNewCollection';
 import EditCollectionPage from './pages/EditCollectionPage';
 
@@ -41,6 +42,8 @@ function App() {
                 element={<AddLinkForm />}
               />
               <Route path='/link/:linkId/edit' element={<EditLinkForm />} />
+              {/* ai-search */}
+              <Route path='/ai-search' element={<AISearch />} />
 
               {/* Profile and Collections */}
               <Route path='/profile' element={<ProfilePage />} />
@@ -49,8 +52,11 @@ function App() {
                 path='/collection/:collectionId'
                 element={<OneCollectionPage />}
               />
-              <Route path="/collections/new" element={<CreateMyCollection />} />
-              <Route path="/collection/:collectionId/edit" element={<EditCollectionPage />} />
+              <Route path='/collections/new' element={<CreateMyCollection />} />
+              <Route
+                path='/collection/:collectionId/edit'
+                element={<EditCollectionPage />}
+              />
 
               {/* 404 Page */}
               <Route path='/*' element={<NotFound />} />
