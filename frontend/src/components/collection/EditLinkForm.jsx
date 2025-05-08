@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const EditLinkForm = () => {
   const { linkId } = useParams();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     url: '',
@@ -74,6 +76,7 @@ const EditLinkForm = () => {
         withCredentials: true,
       });
       alert('Link updated successfully!');
+      navigate(`/link/${linkId}`);
     } catch (error) {
       console.error(`Error updating link ${linkId}:`, error);
       alert('Failed to update link. Check console for details.');
