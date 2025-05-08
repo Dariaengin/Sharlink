@@ -78,25 +78,65 @@ const getLinkById = async (req, res) => {
   }
 };
 
-// Update link
 const updateLink = async (req, res) => {
   try {
     const { linkId } = req.params;
-    const { url, title, description } = req.body;
+    const { url, title, description, collectionId } = req.body;
 
-    const updatedLink = await Link.findByIdAndUpdate(
-      linkId,
-      { url, title, description },
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedLink) {
+    // Find current link
+    const existingLink = await Link.findById(linkId);
+    if (!existingLink) {
       return res.status(404).json({ error: 'Link not found' });
     }
 
-    res.status(200).json(updatedLink);
+    // Check URL if needed
+    if (url && typeof url === 'string') {
+      try {
+        new URL(url);
+      } catch {
+        return res.status(400).json({ error: 'Invalid URL format' });
+      }
+    }
+
+    // Update collection if collectionId has changed
+    if (collectionId && collectionId !== existingLink.collectionId.toString()) {
+      const newCollection = await Collection.findById(collectionId);
+      if (!newCollection) {
+        return res.status(404).json({ error: 'New collection not found' });
+      }
+
+      // Remove from old collection
+      await Collection.findByIdAndUpdate(existingLink.collectionId, {
+        $pull: { linkIds: linkId },
+      });
+
+      // Add to new collection
+      await Collection.findByIdAndUpdate(collectionId, {
+        $addToSet: { linkIds: linkId },
+      });
+
+      existingLink.collectionId = collectionId;
+    }
+
+    // Update remaining fields
+    if (url !== undefined) existingLink.url = url;
+    if (title !== undefined) existingLink.title = title;
+    if (description !== undefined) existingLink.description = description;
+
+    await existingLink.save();
+
+    res.status(200).json(existingLink);
   } catch (error) {
     console.error('Update Link Error:', error);
+
+    if (error.name === 'ValidationError') {
+      const validationErrors = {};
+      for (let field in error.errors) {
+        validationErrors[field] = error.errors[field].message;
+      }
+      return res.status(400).json({ errors: validationErrors });
+    }
+
     res.status(500).json({ error: 'Internal server error' });
   }
 };
