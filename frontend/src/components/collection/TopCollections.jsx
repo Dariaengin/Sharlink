@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -17,35 +17,48 @@ const imageMap = {
   'Home Decor Inspo': '/images/Home-Decor-Inspo-cover.jpeg',
 };
 
-const TopCollections = () => {
-  const [collections, setCollections] = useState([]);
-  const [likes, setLikes] = useState({});
+const TopCollections = ({ collections = [] }) => {
+  const [sortedByLikesCol, setSortedByLikesCol] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCollections = async () => {
-      try {
-        const res = await axios.get('http://localhost:2100/api/collections');
-        const sortedCollections = res.data.sort((a, b) => (b.likes || 0) - (a.likes || 0));
-        setCollections(sortedCollections);
-      } catch (error) {
-        console.error('Failed to fetch collections:', error);
-      }
-    };
+    console.log(collections);
 
-    fetchCollections();
-  }, []);
+    const sortedCollections = collections.sort(
+      (a, b) => (b.likes || 0) - (a.likes || 0)
+    );
+    setSortedByLikesCol(sortedCollections);
+  }, [collections]);
 
   const handleLike = async (collectionId) => {
     try {
-      await axios.post(`http://localhost:2100/api/collections/${collectionId}/like`, {}, { withCredentials: true });
+      await axios.post(
+        `http://localhost:2100/api/collections/${collectionId}/like`,
+        {},
+        { withCredentials: true }
+      );
 
       // Refresh and sort collections after like
-      const res = await axios.get('http://localhost:2100/api/collections');
-      const sortedCollections = res.data.sort((a, b) => (b.likes || 0) - (a.likes || 0));
-      setCollections(sortedCollections);
+      const foundCol = sortedByLikesCol.map((col) => {
+
+        if (col._id === collectionId) {
+          return {
+            ...col,
+            likes: col.likes + 1,
+          };
+        }
+        return col;
+      });
+      const sortedCollections = foundCol.sort(
+        (a, b) => (b.likes || 0) - (a.likes || 0)
+      );
+      setSortedByLikesCol(sortedCollections);
     } catch (error) {
-      if (error.response && error.response.status === 400 && error.response.data?.error === 'Already liked') {
+      if (
+        error.response &&
+        error.response.status === 400 &&
+        error.response.data?.error === 'Already liked'
+      ) {
         alert('You have already liked this collection.');
       } else {
         console.error('Failed to like collection:', error);
@@ -58,7 +71,7 @@ const TopCollections = () => {
     <section className='mt-5'>
       <h2 className='text-center mb-4'>Top Collections</h2>
       <div className='row justify-content-center'>
-        {collections.map((collection) => (
+        {sortedByLikesCol.map((collection) => (
           <div
             key={collection._id}
             className='col-md-3 col-sm-6 mb-4 d-flex align-items-stretch'
@@ -91,7 +104,7 @@ const TopCollections = () => {
                     handleLike(collection._id);
                   }}
                 >
-                  ❤️ {likes[collection._id] ?? collection.likes ?? 0}
+                  ❤️ {collection.likes ?? 0}
                 </button>
               </div>
             </div>

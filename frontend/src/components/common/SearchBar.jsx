@@ -4,15 +4,15 @@ import { Form, Button, InputGroup } from 'react-bootstrap';
 const SearchBar = ({ onSearch }) => {
   const [query, setQuery] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (query.trim()) {
-      onSearch(query);
-    }
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+    onSearch(value); //
   };
 
-  const handleInputChange = (e) => {
-    setQuery(e.target.value);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSearch(query);
   };
 
   return (
