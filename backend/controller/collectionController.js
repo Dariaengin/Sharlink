@@ -195,6 +195,28 @@ const likeCollection = async (req, res) => {
   }
 };
 
+const dislikeCollection = async (req, res) => {
+  try {
+    const collection = await Collection.findById(req.params.collectionId);
+    if (!collection) return res.status(404).json({ error: 'Collection not found' });
+
+    // Prevent duplicate dislikes by checking userId
+    if (collection.dislikedBy?.includes(req.userId)) {
+      return res.status(400).json({ error: 'Already disliked' });
+    }
+
+    // Increase dislikes
+    collection.dislikes = (collection.dislikes || 0) + 1;
+    collection.dislikedBy = [...(collection.dislikedBy || []), req.userId];
+
+    await collection.save();
+    res.status(200).json({ dislikes: collection.dislikes });
+  } catch (error) {
+    console.error('Dislike error:', error);
+    res.status(500).json({ error: 'Failed to dislike collection' });
+  }
+};
+
 module.exports = {
   seedCollections,
   getAllCollections,
@@ -204,4 +226,5 @@ module.exports = {
   updateCollection,
   deleteCollection,
   likeCollection,
+  dislikeCollection,
 };

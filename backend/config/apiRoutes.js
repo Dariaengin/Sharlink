@@ -26,6 +26,7 @@ router.post('/collections/new', userAuth.isLoggedIn, collectionController.create
 router.put('/collections/:collectionId', userAuth.isLoggedIn, collectionController.updateCollection);
 router.delete('/collections/:collectionId', userAuth.isLoggedIn, collectionController.deleteCollection);
 router.post('/collections/:collectionId/like', userAuth.isLoggedIn, collectionController.likeCollection);
+router.post('/collections/:collectionId/dislike', collectionController.dislikeCollection);
 
 // Link routes
 router.post('/links', userAuth.isLoggedIn, linkController.createLink); // Only authorized user can add link

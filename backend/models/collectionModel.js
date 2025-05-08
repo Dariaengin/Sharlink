@@ -27,6 +27,11 @@ const collectionSchema = new mongoose.Schema(
       default: 0,
     },
     likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
+    dislikes: {
+      type: Number,
+      default: 0,
+    },
+    dislikedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
     createdAt: {
       type: Date,
       default: Date.now,

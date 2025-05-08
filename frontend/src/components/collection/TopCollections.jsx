@@ -20,6 +20,7 @@ const imageMap = {
 const TopCollections = () => {
   const [collections, setCollections] = useState([]);
   const [likes, setLikes] = useState({});
+  const [dislikes, setDislikes] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,16 +41,38 @@ const TopCollections = () => {
     try {
       await axios.post(`http://localhost:2100/api/collections/${collectionId}/like`, {}, { withCredentials: true });
 
-      // Refresh and sort collections after like
       const res = await axios.get('http://localhost:2100/api/collections');
       const sortedCollections = res.data.sort((a, b) => (b.likes || 0) - (a.likes || 0));
       setCollections(sortedCollections);
+
+      setLikes((prev) => ({ ...prev, [collectionId]: sortedCollections.find(c => c._id === collectionId)?.likes || 0 }));
+      setDislikes((prev) => ({ ...prev, [collectionId]: 0 }));
     } catch (error) {
       if (error.response && error.response.status === 400 && error.response.data?.error === 'Already liked') {
         alert('You have already liked this collection.');
       } else {
         console.error('Failed to like collection:', error);
         alert('Something went wrong while liking the collection.');
+      }
+    }
+  };
+
+  const handleDislike = async (collectionId) => {
+    try {
+      await axios.post(`http://localhost:2100/api/collections/${collectionId}/dislike`, {}, { withCredentials: true });
+
+      const res = await axios.get('http://localhost:2100/api/collections');
+      const sortedCollections = res.data.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+      setCollections(sortedCollections);
+
+      setDislikes((prev) => ({ ...prev, [collectionId]: sortedCollections.find(c => c._id === collectionId)?.dislikes || 0 }));
+      setLikes((prev) => ({ ...prev, [collectionId]: 0 }));
+    } catch (error) {
+      if (error.response && error.response.status === 400 && error.response.data?.error === 'Already disliked') {
+        alert('You have already disliked this collection.');
+      } else {
+        console.error('Failed to dislike collection:', error);
+        alert('Something went wrong while disliking the collection.');
       }
     }
   };
@@ -92,6 +115,15 @@ const TopCollections = () => {
                   }}
                 >
                   ❤️ {likes[collection._id] ?? collection.likes ?? 0}
+                </button>
+                <button
+                  className='btn btn-sm btn-outline-danger mt-2'
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent navigating to the collection page
+                    handleDislike(collection._id);
+                  }}
+                >
+                  👎 {dislikes[collection._id] ?? collection.dislikes ?? 0}
                 </button>
               </div>
             </div>
