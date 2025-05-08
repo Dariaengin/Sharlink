@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const AddLinkForm = () => {
+const AddLinkForm = ({ onSuccess }) => {
   const [formData, setFormData] = useState({
     url: '',
     title: '',
@@ -11,6 +12,7 @@ const AddLinkForm = () => {
 
   const [errors, setErrors] = useState({});
   const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -54,6 +56,10 @@ const AddLinkForm = () => {
       alert('Link added successfully!');
       setFormData({ url: '', title: '', description: '', collectionId: '' });
       setErrors({});
+      if (onSuccess) {
+        onSuccess(formData.collectionId);
+      }
+      navigate('/collection?added=1');
     } catch (error) {
       console.error('Error adding link:', error);
       alert('Failed to add link. Check console for details.');
