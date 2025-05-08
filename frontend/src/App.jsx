@@ -41,6 +41,10 @@ function App() {
                 path='/collection/:collectionId/add-link'
                 element={<AddLinkForm />}
               />
+              <Route
+                path='/collection/add-link'
+                element={<AddLinkForm />}
+              />
               <Route path='/link/:linkId/edit' element={<EditLinkForm />} />
               {/* ai-search */}
               <Route path='/ai-search' element={<AISearch />} />
