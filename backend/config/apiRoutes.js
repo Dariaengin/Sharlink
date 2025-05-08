@@ -2,6 +2,7 @@ const express = require('express');
 const userController = require('../controller/userController');
 const collectionController = require('../controller/collectionController');
 const linkController = require('../controller/linkController');
+const { getUserCollections } = require('../controller/collectionController');
 
 const userAuth = require('../auth/auth');
 const { isLinkOwner } = require('../middlewares/ownership');
@@ -20,6 +21,11 @@ router.get(
   '/collections/:collectionId',
   collectionController.getCollectionById
 );
+router.get('/my-collections', userAuth.isLoggedIn, getUserCollections);
+router.post('/collections/new', userAuth.isLoggedIn, collectionController.createCollection);
+router.put('/collections/:collectionId', userAuth.isLoggedIn, collectionController.updateCollection);
+router.delete('/collections/:collectionId', userAuth.isLoggedIn, collectionController.deleteCollection);
+router.post('/collections/:collectionId/like', userAuth.isLoggedIn, collectionController.likeCollection);
 
 // Link routes
 router.post('/links', userAuth.isLoggedIn, linkController.createLink); // Only authorized user can add link

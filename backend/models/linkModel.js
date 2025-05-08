@@ -26,13 +26,13 @@ const linkSchema = new mongoose.Schema(
       type: String,
       required: true,
       minlength: [5, 'Description must be at least 4 characters'],
-      maxlength: [30, 'Title must be less than 31 characters'],
+      maxlength: [100, 'Title must be less than 101 characters'],
     },
     description: {
       type: String,
       required: false,
-      minlength: [5, 'Description must be at least 4 characters'],
-      maxlength: [200, 'Description must be less than 201 characters'],
+      // minlength: [5, 'Description must be at least 4 characters'],
+      // maxlength: [200, 'Description must be less than 201 characters'],
     },
 
     createdAt: {
