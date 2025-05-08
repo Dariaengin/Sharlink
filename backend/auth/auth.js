@@ -1,37 +1,17 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
-const isLoggedIn = (req, res, next) => {
-  const token = req.cookies.authToken;
+const authenticate = (req, res, next) => {
+  const token = req.header('Authorization')?.split(' ')[1]; 
 
-  if (!token) {
-    return res.status(401).json({ error: 'Access denied. No token provided.' });
-  }
+  if (!token) return res.status(401).json({ msg: 'No token, authorization denied' });
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.userId = decoded.userId;
+    req.user = decoded.user; 
     next();
   } catch (err) {
-    return res.status(400).json({ error: 'Invalid token.' });
+    res.status(401).json({ msg: 'Token is not valid' });
   }
 };
 
-const isSignUpLoginAnable = (req, res, next) => {
-  const token = req.cookies.authToken;
-
-  if (!token) {
-    return next(); // no token → can go to signup/login
-  }
-
-  try {
-    jwt.verify(token, process.env.JWT_SECRET);
-    return res.status(403).json({ message: 'Already logged in.' });
-  } catch (err) {
-    next(); // token exists but invalid → let them re-login
-  }
-};
-
-module.exports = {
-  isLoggedIn,
-  isSignUpLoginAnable,
-};
+export default authenticate;

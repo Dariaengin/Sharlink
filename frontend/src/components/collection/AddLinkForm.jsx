@@ -35,7 +35,9 @@ const AddLinkForm = () => {
     }
 
     try {
-      await axios.post('http://localhost:2100/api/links', formData);
+      await axios.put(`http://localhost:2100/api/links/${linkId}`, formData, {
+        withCredentials: true,
+      });
       alert('Link added successfully!');
       setFormData({ url: '', title: '', description: '', category: '' });
       setErrors({});
