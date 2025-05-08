@@ -13,32 +13,34 @@ const EditLinkForm = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     const fetchLink = async () => {
       try {
-        await axios.put(`http://localhost:2100/api/links/${linkId}`, formData, {
+        const res = await axios.get(`http://localhost:2100/api/links/${linkId}`, {
           withCredentials: true,
         });
         setFormData(res.data);
       } catch (error) {
         console.error(`Error fetching link ${linkId}:`, error);
-        if (error.response) {
-          console.error('Error response data:', error.response.data);
-          console.error('Error response status:', error.response.status);
-        } else if (error.request) {
-          console.error('Error request:', error.request);
-        } else {
-          console.error('Error message:', error.message);
-        }
         alert('Failed to load link. Check console for details.');
+      }
+    };
+
+    const fetchCategories = async () => {
+      try {
+        const res = await axios.get('http://localhost:2100/api/collections');
+        setCategories(res.data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
       }
     };
 
     if (linkId) {
       fetchLink();
+      fetchCategories();
     }
-
   }, [linkId]);
 
   const handleChange = (e) => {
@@ -55,7 +57,9 @@ const EditLinkForm = () => {
     return newErrors;
   };
 
-  const handleSave = async () => {
+  const handleSave = async (e) => {
+    e.preventDefault();
+
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -64,19 +68,11 @@ const EditLinkForm = () => {
 
     try {
       await axios.put(`http://localhost:2100/api/links/${linkId}`, formData, {
-              withCredentials: true,
-            });
+        withCredentials: true,
+      });
       alert('Link updated successfully!');
     } catch (error) {
       console.error(`Error updating link ${linkId}:`, error);
-       if (error.response) {
-        console.error('Error response data:', error.response.data);
-        console.error('Error response status:', error.response.status);
-      } else if (error.request) {
-        console.error('Error request:', error.request);
-      } else {
-        console.error('Error message:', error.message);
-      }
       alert('Failed to update link. Check console for details.');
     }
   };
@@ -86,92 +82,48 @@ const EditLinkForm = () => {
       <div className="row">
         <div className="col-12 col-md-6">
           <div className="bg-light p-4 rounded h-100 d-flex flex-column justify-content-between">
-            <form className="d-flex flex-column gap-3">
+            <form className="d-flex flex-column gap-3" onSubmit={handleSave}>
+              <input
+                type="text"
+                name="url"
+                placeholder="URL"
+                value={formData.url}
+                onChange={handleChange}
+              />
+              {errors.url && <div className="text-danger">{errors.url}</div>}
 
-              {/* URL Field */}
-              <div className="row align-items-center">
-                <label htmlFor="url" className="col-sm-3 col-form-label">
-                  URL<span className="text-danger">*</span>
-                </label>
-                <div className="col-sm-9">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="url"
-                    name="url"
-                    value={formData.url}
-                    onChange={handleChange}
-                    placeholder="Pre-filled URL"
-                  />
-                  {errors.url && <div className="text-danger small">{errors.url}</div>}
-                </div>
-              </div>
+              <input
+                type="text"
+                name="title"
+                placeholder="Title"
+                value={formData.title}
+                onChange={handleChange}
+              />
 
-              {/* Title Field */}
-              <div className="row align-items-center">
-                <label htmlFor="title" className="col-sm-3 col-form-label">Title</label>
-                <div className="col-sm-9">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="title"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleChange}
-                    placeholder="Pre-filled title"
-                  />
-                </div>
-              </div>
+              <textarea
+                name="description"
+                placeholder="Description"
+                value={formData.description}
+                onChange={handleChange}
+              />
 
-              {/* Description Field */}
-              <div className="row align-items-center">
-                <label htmlFor="description" className="col-sm-3 col-form-label">Description</label>
-                <div className="col-sm-9">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="description"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    placeholder="Pre-filled description"
-                  />
-                </div>
-              </div>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+              >
+                <option value="">Select a category</option>
+                {categories.map((cat) => (
+                  <option key={cat._id} value={cat._id}>
+                    {cat.title}
+                  </option>
+                ))}
+              </select>
+              {errors.category && (
+                <div className="text-danger">{errors.category}</div>
+              )}
 
-              {/* Category Field */}
-              <div className="row align-items-center">
-                <label htmlFor="category" className="col-sm-3 col-form-label">
-                  Category<span className="text-danger">*</span>
-                </label>
-                <div className="col-sm-9">
-                  <select
-                    id="category"
-                    name="category"
-                    className="form-select"
-                    value={formData.category}
-                    onChange={handleChange}
-                  >
-                    <option value="">-- Select --</option>
-                    <option value="Computer Games">Computer Games</option>
-                    <option value="Musicians">Musicians</option>
-                    <option value="Museums">Museums</option>
-                  </select>
-                  {errors.category && <div className="text-danger small">{errors.category}</div>}
-                </div>
-              </div>
-
-              {/* Save Button */}
-              <div className="d-flex justify-content-end mt-auto">
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={handleSave}
-                >
-                  Save Changes
-                </button>
-              </div>
-
+              <button type="submit">Save Changes</button>
             </form>
           </div>
         </div>
