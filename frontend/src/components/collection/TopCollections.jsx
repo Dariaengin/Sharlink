@@ -22,6 +22,8 @@ const TopCollections = ({ collections = [] }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(collections);
+
     const sortedCollections = collections.sort(
       (a, b) => (b.likes || 0) - (a.likes || 0)
     );
@@ -38,6 +40,7 @@ const TopCollections = ({ collections = [] }) => {
 
       // Refresh and sort collections after like
       const foundCol = sortedByLikesCol.map((col) => {
+
         if (col._id === collectionId) {
           return {
             ...col,
