@@ -1,3 +1,4 @@
+import { useAuth } from '../auth/AuthContext';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -17,40 +18,54 @@ const imageMap = {
   'Home Decor Inspo': '/images/Home-Decor-Inspo-cover.jpeg',
 };
 
-const TopCollections = () => {
-  const [collections, setCollections] = useState([]);
-  const [likes, setLikes] = useState({});
+const TopCollections = ({ collections = [] }) => {
+  const [sortedByLikesCol, setSortedByLikesCol] = useState([]);
   const navigate = useNavigate();
 
+  const { user } = useAuth();
+  const currentUserId = user?._id;
+
   useEffect(() => {
-    const fetchCollections = async () => {
-      try {
-        const res = await axios.get('http://localhost:2100/api/collections');
-        const sortedCollections = res.data.sort((a, b) => (b.likes || 0) - (a.likes || 0));
-        setCollections(sortedCollections);
-      } catch (error) {
-        console.error('Failed to fetch collections:', error);
-      }
-    };
+    console.log(collections);
 
-    fetchCollections();
-  }, []);
+    const sortedCollections = collections.sort(
+      (a, b) => (b.likes || 0) - (a.likes || 0)
+    );
+    setSortedByLikesCol(sortedCollections);
+  }, [collections]);
 
-  const handleLike = async (collectionId) => {
+  const handleLike = async (collectionId, alreadyLiked) => {
     try {
-      await axios.post(`http://localhost:2100/api/collections/${collectionId}/like`, {}, { withCredentials: true });
+      const endpoint = alreadyLiked ? 'unlike' : 'like';
+      await axios.post(
+        `http://localhost:2100/api/collections/${collectionId}/${endpoint}`,
+        {},
+        { withCredentials: true }
+      );
 
-      // Refresh and sort collections after like
-      const res = await axios.get('http://localhost:2100/api/collections');
-      const sortedCollections = res.data.sort((a, b) => (b.likes || 0) - (a.likes || 0));
-      setCollections(sortedCollections);
+      // Update local state
+      const updatedCollections = sortedByLikesCol.map((col) => {
+        if (col._id === collectionId) {
+          const updatedLikedBy = alreadyLiked
+            ? col.likedBy.filter((id) => id !== currentUserId)
+            : [...(col.likedBy || []), currentUserId];
+
+          return {
+            ...col,
+            likedBy: updatedLikedBy,
+            likes: alreadyLiked ? col.likes - 1 : col.likes + 1,
+          };
+        }
+        return col;
+      });
+
+      const sortedCollections = updatedCollections.sort(
+        (a, b) => (b.likes || 0) - (a.likes || 0)
+      );
+      setSortedByLikesCol(sortedCollections);
     } catch (error) {
-      if (error.response && error.response.status === 400 && error.response.data?.error === 'Already liked') {
-        alert('You have already liked this collection.');
-      } else {
-        console.error('Failed to like collection:', error);
-        alert('Something went wrong while liking the collection.');
-      }
+      console.error(`Failed to ${alreadyLiked ? 'unlike' : 'like'} collection:`, error);
+      alert(`Something went wrong while trying to ${alreadyLiked ? 'unlike' : 'like'} the collection.`);
     }
   };
 
@@ -58,7 +73,7 @@ const TopCollections = () => {
     <section className='mt-5'>
       <h2 className='text-center mb-4'>Top Collections</h2>
       <div className='row justify-content-center'>
-        {collections.map((collection) => (
+        {sortedByLikesCol.map((collection) => (
           <div
             key={collection._id}
             className='col-md-3 col-sm-6 mb-4 d-flex align-items-stretch'
@@ -85,13 +100,18 @@ const TopCollections = () => {
                   {collection.linkIds?.length || 0} links
                 </p>
                 <button
-                  className='btn btn-sm btn-outline-primary mt-auto'
+                  className={`btn btn-sm mt-auto ${
+                    collection.likedBy?.includes(currentUserId)
+                      ? 'btn-outline-danger'
+                      : 'btn-outline-primary'
+                  }`}
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevent navigating to the collection page
-                    handleLike(collection._id);
+                    e.stopPropagation();
+                    const alreadyLiked = collection.likedBy?.includes(currentUserId);
+                    handleLike(collection._id, alreadyLiked);
                   }}
                 >
-                  ❤️ {likes[collection._id] ?? collection.likes ?? 0}
+                  ❤️ {collection.likes ?? 0}
                 </button>
               </div>
             </div>

@@ -62,7 +62,7 @@ const seedCollections = async (req, res) => {
 // Get all collections
 const getAllCollections = async (req, res) => {
   try {
-    const collections = await Collection.find().populate('linkIds');
+    const collections = await Collection.find().populate("linkIds", "title");
     res.status(200).json(collections);
   } catch (err) {
     console.error('Get collections error:', err);
@@ -75,7 +75,7 @@ const getCollectionById = async (req, res) => {
   try {
     const collection = await Collection.findById(
       req.params.collectionId
-    ).populate('linkIds');
+    ).populate("linkIds", "title");
     if (!collection) {
       return res.status(404).json({ message: 'Collection not found' });
     }
@@ -88,7 +88,10 @@ const
 getUserCollections = async (req, res) => {
   try {
     const userId = req.userId; // set by auth middleware
-    const collections = await Collection.find({ userId }).populate('linkIds');
+    const collections = await Collection.find({ userId }).populate(
+      "linkIds",
+      "title"
+    );
     res.status(200).json(collections);
   } catch (error) {
     console.error('Error fetching user collections:', error);
@@ -195,6 +198,28 @@ const likeCollection = async (req, res) => {
   }
 };
 
+const unlikeCollection = async (req, res) => {
+  try {
+    const collection = await Collection.findById(req.params.collectionId);
+    if (!collection) return res.status(404).json({ error: 'Collection not found' });
+
+    const userIndex = collection.likedBy.indexOf(req.userId);
+    if (userIndex === -1) {
+      return res.status(400).json({ error: 'You have not liked this collection' });
+    }
+
+    // Decrease likes
+    collection.likes = Math.max(0, (collection.likes || 0) - 1);
+    collection.likedBy.splice(userIndex, 1);
+
+    await collection.save();
+    res.status(200).json({ likes: collection.likes });
+  } catch (error) {
+    console.error('Unlike error:', error);
+    res.status(500).json({ error: 'Failed to unlike collection' });
+  }
+};
+
 module.exports = {
   seedCollections,
   getAllCollections,
@@ -204,4 +229,5 @@ module.exports = {
   updateCollection,
   deleteCollection,
   likeCollection,
+  unlikeCollection,
 };

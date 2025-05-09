@@ -16,6 +16,7 @@ const EditLinkForm = () => {
 
   const [errors, setErrors] = useState({});
   const [categories, setCategories] = useState([]);
+  const [collectionTitle, setCollectionTitle] = useState('');
 
   useEffect(() => {
     const fetchLink = async () => {
@@ -88,7 +89,11 @@ const EditLinkForm = () => {
       <div className='row'>
         <div className='col-12 col-md-6'>
           <div className='bg-light p-4 rounded h-100 d-flex flex-column justify-content-between'>
+            {collectionTitle && (
+              <h5 className='mb-3'>Edit link: <strong>{collectionTitle}</strong></h5>
+            )}
             <form className='d-flex flex-column gap-3' onSubmit={handleSave}>
+              <h5>URL</h5>
               <input
                 type='text'
                 name='url'
@@ -98,6 +103,7 @@ const EditLinkForm = () => {
               />
               {errors.url && <div className='text-danger'>{errors.url}</div>}
 
+              <h5>Title</h5>
               <input
                 type='text'
                 name='title'
@@ -106,6 +112,7 @@ const EditLinkForm = () => {
                 onChange={handleChange}
               />
 
+              <h5>Description</h5>
               <textarea
                 name='description'
                 placeholder='Description'
@@ -113,6 +120,7 @@ const EditLinkForm = () => {
                 onChange={handleChange}
               />
 
+              <h5>Category</h5>
               <select
                 name='collectionId'
                 value={formData.collectionId}

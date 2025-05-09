@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import LinkCard from '../components/collection/LinkCard';
+import { useAuth } from '../components/auth/AuthContext';
 
 const OneCollectionPage = () => {
   const { collectionId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [collection, setCollection] = useState(null);
   const [links, setLinks] = useState([]);
 
@@ -25,7 +27,8 @@ const OneCollectionPage = () => {
       try {
         const res = await axios.get(`http://localhost:2100/api/links`);
         const filteredLinks = res.data.filter(
-          (link) => link.collectionId._id === collectionId
+          (link) =>
+            link.collectionId === collectionId || link.collectionId?._id === collectionId
         );
         setLinks(filteredLinks);
       } catch (err) {
@@ -58,18 +61,22 @@ const OneCollectionPage = () => {
       <div className='d-flex justify-content-between align-items-center mb-3'>
         <h1 className='mb-0'>{collection.title}</h1>
         <div className='d-flex gap-2'>
-        <button
-            onClick={handleDelete}
-            className='btn btn-danger'
-          >
-            Delete
-          </button>
-          <a
-            href={`/collection/${collectionId}/edit`}
-            className='btn btn-secondary'
-          >
-            Edit
-          </a>
+          {user?._id === collection.userId && (
+            <>
+              <button
+                onClick={handleDelete}
+                className='btn btn-danger'
+              >
+                Delete
+              </button>
+              <a
+                href={`/collection/${collectionId}/edit`}
+                className='btn btn-secondary'
+              >
+                Edit
+              </a>
+            </>
+          )}
           <a
             href={`/collection/${collectionId}/add-link`}
             className='btn btn-primary'
