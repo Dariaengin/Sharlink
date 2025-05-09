@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // Add this line
+import { useParams, useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
 
 const AddLinkForm = ({ onSuccess }) => {
   const { collectionId } = useParams();
 
   const [collectionTitle, setCollectionTitle] = useState('');
-
   const [formData, setFormData] = useState({
     url: '',
     title: '',
     description: '',
     collectionId: '',
   });
-
   const [errors, setErrors] = useState({});
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
@@ -86,9 +84,10 @@ const AddLinkForm = ({ onSuccess }) => {
         <div className='col-12 col-md-6'>
           <div className='bg-light p-4 rounded h-100 d-flex flex-column justify-content-between'>
             {collectionTitle && (
-              <h5 className='mb-3'>Adding link to: <strong>{collectionTitle}</strong></h5>
+              <h5 className='mb-3'>Add new link: <strong>{collectionTitle}</strong></h5>
             )}
             <form className='d-flex flex-column gap-3' onSubmit={handleSubmit}>
+              <h5>URL</h5>
               <input
                 type='text'
                 name='url'
@@ -98,6 +97,7 @@ const AddLinkForm = ({ onSuccess }) => {
               />
               {errors.url && <div className='text-danger'>{errors.url}</div>}
 
+              <h5>Title</h5>
               <input
                 type='text'
                 name='title'
@@ -106,6 +106,7 @@ const AddLinkForm = ({ onSuccess }) => {
                 onChange={handleChange}
               />
 
+              <h5>Description</h5>
               <textarea
                 name='description'
                 placeholder='Description'
@@ -113,6 +114,7 @@ const AddLinkForm = ({ onSuccess }) => {
                 onChange={handleChange}
               />
 
+              <h5>Category</h5>
               <select
                 name='collectionId'
                 value={formData.collectionId}
