@@ -27,7 +27,8 @@ const OneCollectionPage = () => {
       try {
         const res = await axios.get(`http://localhost:2100/api/links`);
         const filteredLinks = res.data.filter(
-          (link) => link.collectionId._id === collectionId
+          (link) =>
+            link.collectionId === collectionId || link.collectionId?._id === collectionId
         );
         setLinks(filteredLinks);
       } catch (err) {
