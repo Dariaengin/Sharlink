@@ -17,6 +17,7 @@ const EditLinkForm = () => {
   const [errors, setErrors] = useState({});
   const [categories, setCategories] = useState([]);
   const [collectionTitle, setCollectionTitle] = useState('');
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const fetchLink = async () => {
@@ -30,7 +31,7 @@ const EditLinkForm = () => {
         setFormData(res.data);
       } catch (error) {
         console.error(`Error fetching link ${linkId}:`, error);
-        alert('Failed to load link. Check console for details.');
+        setMessage('Failed to load link. Check console for details.');
       }
     };
 
@@ -76,11 +77,11 @@ const EditLinkForm = () => {
       await axios.put(`http://localhost:2100/api/links/${linkId}`, formData, {
         withCredentials: true,
       });
-      alert('Link updated successfully!');
+      setMessage('Link updated successfully!');
       navigate(`/link/${linkId}`);
     } catch (error) {
       console.error(`Error updating link ${linkId}:`, error);
-      alert('Failed to update link. Check console for details.');
+      setMessage('Failed to update link. Check console for details.');
     }
   };
 
@@ -91,6 +92,11 @@ const EditLinkForm = () => {
           <div className='bg-light p-4 rounded h-100 d-flex flex-column justify-content-between'>
             {collectionTitle && (
               <h5 className='mb-3'>Edit link: <strong>{collectionTitle}</strong></h5>
+            )}
+            {message && (
+              <div className={`alert ${message.includes('successfully') ? 'alert-success' : 'alert-danger'}`} role='alert'>
+                {message}
+              </div>
             )}
             <form className='d-flex flex-column gap-3' onSubmit={handleSave}>
               <h5>URL</h5>

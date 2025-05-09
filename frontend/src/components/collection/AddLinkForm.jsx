@@ -14,6 +14,7 @@ const AddLinkForm = ({ onSuccess }) => {
   });
   const [errors, setErrors] = useState({});
   const [categories, setCategories] = useState([]);
+  const [message, setMessage] = useState({ type: '', text: '' });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -65,7 +66,7 @@ const AddLinkForm = ({ onSuccess }) => {
       var newLink = await axios.post('http://localhost:2100/api/links', formData, {
         withCredentials: true,
       });
-      alert('Link added successfully!');
+      setMessage({ type: 'success', text: 'Link added successfully!' });
       setFormData({ url: '', title: '', description: '', collectionId: '' });
       setErrors({});
       if (onSuccess) {
@@ -74,7 +75,7 @@ const AddLinkForm = ({ onSuccess }) => {
       navigate(`/link/${newLink.data._id}`);
     } catch (error) {
       console.error('Error adding link:', error);
-      alert('Failed to add link. Check console for details.');
+      setMessage({ type: 'error', text: 'Failed to add link. Check console for details.' });
     }
   };
 
@@ -85,6 +86,11 @@ const AddLinkForm = ({ onSuccess }) => {
           <div className='bg-light p-4 rounded h-100 d-flex flex-column justify-content-between'>
             {collectionTitle && (
               <h5 className='mb-3'>Add new link: <strong>{collectionTitle}</strong></h5>
+            )}
+            {message.text && (
+              <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'}`} role="alert">
+                {message.text}
+              </div>
             )}
             <form className='d-flex flex-column gap-3' onSubmit={handleSubmit}>
               <h5>URL</h5>
